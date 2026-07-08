@@ -518,7 +518,9 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 </head>
 <body class="kilitli cimenli">
 
-<video id="cicekVideo" playsinline muted style="position:fixed; inset:0; width:100vw; height:100vh; object-fit:cover; z-index:99999; display:none;"></video>
+<video id="cicekVideo" playsinline muted style="display:none;"></video>
+
+<canvas id="cicekCanvas" style="position:fixed; inset:0; width:100vw; height:100vh; z-index:99999; pointer-events:none; display:none;"></canvas>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -736,7 +738,7 @@ const AYAR = {
   sifre: "2407",
   sifreIpucu: "İpucu: Bizim için en özel tarih 😉",   
   kilitArkaplanFoto: "",   
-  videoDosyaAdi: "cicek_animasyon.mov", // İsteğin üzerine geri güncellendi
+  videoDosyaAdi: "cicek_animasyon.mp4", 
 
   // 0) Açılış — kilit açılınca gelen ilk ekran
   acilisFoto: "",          
@@ -781,7 +783,7 @@ const AYAR = {
     { dosya: "ani2.jpg", tarih: "2. İlk Kahve Randevumuz", aciklama: "Heyecandan ellerimin titrediği, kahve bardağını nasıl tutacağımı şaşırdığım o tatlı gün." },
     { dosya: "ani3.jpg", tarih: "3. İlk Fotoğrafımız", aciklama: "İkimiz de ne kadar heyecanlıydık, yüzümüzdeki o tatlı çekingenlik hâlâ dün gibi." },
     { dosya: "ani4.jpg", tarih: "4. Yağmurlu Bir Gün", aciklama: "Sırılsıklam olmamıza rağmen birlikte şemsiyenin altında dünyanın en mutlu insanlarıydık." },
-    { dosya: "ani5.jpg", tarih: "5. İlk Sahil Yürüyüşümüz", aciklama: "Deniz kokusu, hafif bir rüzgar ve elini ilk kez tuttum o unutulmaz an." },
+    { dosya: "ani5.jpg", tarih: "5. İlk Sahil Yürüyüşümüz", aciklama: "Deniz kokusu, hafif bir rüzgar ve elini ilk kez tuttuğum o unutulmaz an." },
     { dosya: "ani6.jpg", tarih: "6. Beraber İlk Film Gecemiz", aciklama: "Filmi izlemekten çok senin gülüşünü, yüzündeki her bir ifadeyi izlemeyi seçtiğim gece." },
     { dosya: "ani7.jpg", tarih: "7. Sınav Haftası Dayanışması", aciklama: "Kütüphanede sabahladığımız, kahve bardakları arasında birbirimize güç verdiğimiz anlar." },
     { dosya: "ani8.jpg", tarih: "8. İlk Tatilimiz", aciklama: "Deniz, güneş ve yanımda dünyanın en güzel kadını. Zaman dursun istemiştim." },
@@ -789,7 +791,7 @@ const AYAR = {
     { dosya: "ani10.jpg", tarih: "10. İlk Akşam Yemeğimiz", aciklama: "Şık bir masa, loş ışıklar ve karşımda tüm zarafetiyle oturan bir melek." },
     { dosya: "ani11.jpg", tarih: "11. Sürpriz Buluşma", aciklama: "Seni ansızın karşımda gördüğümde kalbimin nasıl hızlandığını dün gibi hatırlıyorum." },
     { dosya: "ani12.jpg", tarih: "12. Parkta Piknik Keyfi", aciklama: "Çimenlerin üzerine uzanıp gökyüzünü izlerken kurduğumuz o güzel hayaller." },
-    { dosya: "ani13.jpg", tarih: "13. İlk Concert'imiz", aciklama: "Şarkılara avazımız çıktığı kadar eşlik ederken birbirimize bakıp gülüştüğümüz an." },
+    { dosya: "ani13.jpg", tarih: "13. İlk Konserimiz", aciklama: "Şarkılara avazımız çıktığı kadar eşlik ederken birbirimize bakıp gülüştüğümüz an." },
     { dosya: "ani14.jpg", tarih: "14. Sabah Yürüyüşü", aciklama: "Güneş henüz yeni doğarken seninle temiz havayı içimize çektiğimiz huzurlu anlar." },
     { dosya: "ani15.jpg", tarih: "15. Kışın İlk Karı", aciklama: "Soğukta ellerimiz buz tutmuşken birbirimizi ısıtan o sıcacık sarılmamız." },
     { dosya: "ani16.jpg", tarih: "16. Uzun Yol Yolculuğu", aciklama: "Arabada en sevdiğimiz şarkıları son ses açıp yol alırken hayatın güzelliğini hissettik." },
@@ -849,30 +851,72 @@ const AYAR = {
 <script>
 const $ = s => document.querySelector(s);
 
-/* ---- TAM EKRAN KİLİTLİ ÇİÇEK VİDEO FONKSİYONU ---- */
+/* ---- SİHRİ GERÇEKLEŞTİREN Gelişmiş CHROMA KEY CANVAS SİSTEMİ ---- */
 function oynatCicekAnimasyonu(onPeak, onEnd) {
   const vid = $("#cicekVideo");
-  vid.src = AYAR.videoDosyaAdi;
-  vid.style.display = "block";
-  vid.style.pointerEvents = "auto"; // Dokunmaları engellemek için aktif edildi
-  vid.currentTime = 0;
+  const can = $("#cicekCanvas");
+  const cctx = can.getContext("2d");
   
-  vid.play().catch(e => {
-    console.log("Video otomatik oynatılamadı, fallback tetiklendi.", e);
+  vid.src = AYAR.videoDosyaAdi;
+  can.style.display = "block";
+  can.style.pointerEvents = "auto"; // Video açıkken ekrandaki hiçbir şeye tıklanamaz!
+
+  // Performans için optimize edilmiş sabit çizim bütçesi (Mobil cihazları kasmaması için)
+  can.width = 960;
+  can.height = 540;
+
+  vid.currentTime = 0;
+  vid.play().then(() => {
+    requestAnimationFrame(kareTarat);
+  }).catch(e => {
+    console.log("Video oynatma engellendi, doğrudan geçiş yapılıyor.", e);
     if(onPeak) onPeak();
     if(onEnd) onEnd();
+    can.style.display = "none";
+    can.style.pointerEvents = "none";
   });
 
-  // Çiçek patlamasının ekranı kapladığı o en canlı an (3. saniye) arka plandaki sayfayı kaydır/aç
-  setTimeout(() => {
-    if(onPeak) onPeak();
-  }, 3000);
+  let peakTetiklendi = false;
+  
+  function kareTarat() {
+    if (vid.paused || vid.ended) {
+      can.style.display = "none";
+      can.style.pointerEvents = "none"; // Dokunma kilidini aç
+      if(onEnd) onEnd();
+      return;
+    }
 
-  vid.onended = () => {
-    vid.style.display = "none";
-    vid.style.pointerEvents = "none"; // Video bittiğinde dokunma engelini kaldır
-    if(onEnd) onEnd();
-  };
+    // Çiçek patlamasının tam ekranı kapladığı 3. saniyede alttaki geçiş fonksiyonunu çalıştır
+    if (vid.currentTime >= 3.0 && !peakTetiklendi) {
+      peakTetiklendi = true;
+      if(onPeak) onPeak();
+    }
+
+    // Videonun karesini tuvale aktar
+    cctx.drawImage(vid, 0, 0, can.width, can.height);
+    
+    try {
+      const imgData = cctx.getImageData(0, 0, can.width, can.height);
+      const data = imgData.data;
+      
+      // Tüm pikselleri tara: videonun arka planındaki beyaz/açık renkleri transparent yap
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i+1];
+        const b = data[i+2];
+        
+        // Beyaz ve açık gri tonlu pikselleri algılayan eşik değeri
+        if (r > 195 && g > 195 && b > 195) {
+          data[i+3] = 0; // Alpha (şeffaflık) değerini sıfırla -> PNG gibi oldu!
+        }
+      }
+      cctx.putImageData(imgData, 0, 0);
+    } catch(err) {
+      // Local testing cross-origin safe bypass
+    }
+
+    requestAnimationFrame(kareTarat);
+  }
 }
 
 /* ---- içerik yerleştir ---- */
