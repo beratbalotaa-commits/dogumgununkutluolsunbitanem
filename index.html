@@ -68,39 +68,97 @@ p{font-size:clamp(.95rem,3.6vw,1.08rem);max-width:560px;line-height:1.75;opacity
 
 /* ============ KİLİT EKRANI (sabit katman) ============ */
 #kilitKatman{
-  position:fixed;inset:0;z-index:100;
+  position:fixed;inset:0;z-index:100;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
-  background:
-    radial-gradient(ellipse at 50% -20%, rgba(233,182,76,.10), transparent 55%),
-    linear-gradient(180deg, var(--cimen-koyu), var(--cimen));
-  transition:opacity .9s ease, visibility .9s;
+  transition:opacity .9s ease, visibility .9s, transform .9s ease;
   padding:24px;text-align:center;
 }
-#kilitKatman.acildi{opacity:0;visibility:hidden}
-.kilit-baslik{font-family:'Pinyon Script',cursive;font-size:clamp(2.2rem,9vw,3.4rem);text-shadow:0 2px 14px rgba(0,0,0,.45)}
-.kilit{
-  width:min(330px,88vw);border-radius:26px;padding:28px 24px 24px;
-  background:linear-gradient(180deg, rgba(250,243,227,.10), rgba(250,243,227,.05));
-  border:1px solid rgba(250,243,227,.22);backdrop-filter:blur(10px);
-  box-shadow:0 28px 70px rgba(0,0,0,.55);
-  display:flex;flex-direction:column;align-items:center;gap:17px;
+#kilitKatman .fon{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  background-image:
+    radial-gradient(ellipse at 50% -20%, rgba(233,182,76,.10), transparent 55%),
+    linear-gradient(180deg, var(--cimen-koyu), var(--cimen));
 }
-.kilit-ust{font-size:.95rem;opacity:.85}
-.nokta-sira{display:flex;gap:16px;height:16px}
-.snokta{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(250,243,227,.7);transition:all .2s}
-.snokta.dolu{background:var(--gunes);border-color:var(--gunes);box-shadow:0 0 12px rgba(233,182,76,.7)}
+#kilitKatman .perde{position:absolute;inset:0;background:rgba(8,20,11,.55);backdrop-filter:blur(5px)}
+#kilitKatman > *:not(.fon):not(.perde){position:relative;z-index:2}
+#kilitKatman.acildi{opacity:0;visibility:hidden;transform:scale(1.14)}
+.kilit-baslik{font-family:'Pinyon Script',cursive;font-size:clamp(2.2rem,9vw,3.4rem);text-shadow:0 2px 14px rgba(0,0,0,.55)}
+
+/* kalp asma kilit */
+.asma-kilit{display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 22px 40px rgba(0,0,0,.55))}
+.kanca{
+  width:104px;height:88px;margin-bottom:-40px;
+  border:15px solid #93ac8d;border-bottom:none;border-radius:60px 60px 0 0;
+  box-shadow:inset 0 3px 4px rgba(255,255,255,.45), inset 0 -4px 6px rgba(20,40,25,.55);
+  transform-origin:14px 100%;
+  transition:transform .55s cubic-bezier(.3,1.5,.5,1);
+}
+.asma-kilit.acik .kanca{transform:translateY(-34px) rotate(-16deg)}
+.kilit-govde{
+  position:relative;width:min(230px,62vw);aspect-ratio:1;
+  clip-path:url(#kalpKlip);
+  background:linear-gradient(150deg,#55895e,#2f5a3b 52%,#1c3a26);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding-top:6%;gap:12px;
+}
+.kilit-govde::before{
+  content:"";position:absolute;left:14%;top:8%;width:34%;height:26%;border-radius:50%;
+  background:radial-gradient(ellipse, rgba(255,255,255,.28), transparent 70%);
+  pointer-events:none;
+}
+.haneler{display:flex;gap:9px}
+.hane{
+  width:32px;height:42px;border-radius:8px;
+  background:rgba(250,243,227,.13);border:1.5px solid rgba(250,243,227,.55);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;font-weight:600;color:var(--krem);
+  transition:all .18s;
+}
+.hane.dolu{background:var(--gunes);border-color:var(--gunes);color:var(--cimen-koyu);box-shadow:0 0 14px rgba(233,182,76,.65)}
+.delikk{width:15px;height:15px;border-radius:50%;background:rgba(8,22,12,.8);position:relative}
+.delikk::after{content:"";position:absolute;left:50%;top:11px;transform:translateX(-50%);width:10px;height:13px;background:rgba(8,22,12,.8);clip-path:polygon(32% 0,68% 0,100% 100%,0 100%)}
+.asma-kilit.hata{animation:salla .45s ease}
 .tus-takimi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .tus{
   width:62px;height:62px;border-radius:50%;cursor:pointer;color:var(--krem);
   font-size:1.4rem;font-weight:500;font-family:'Quicksand',sans-serif;
-  background:rgba(250,243,227,.09);border:1px solid rgba(250,243,227,.22);
+  background:rgba(250,243,227,.12);border:1px solid rgba(250,243,227,.3);
+  backdrop-filter:blur(4px);
   transition:background .15s, transform .1s;
 }
 .tus:active{background:rgba(233,182,76,.3);transform:scale(.92)}
 .tus.yardimci{font-size:1rem;background:transparent;border-color:transparent}
-.kilit.hata{animation:salla .45s ease}
 @keyframes salla{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-11px)}40%,80%{transform:translateX(11px)}}
-#sifreMesaj{font-size:.85rem;min-height:1.2em;color:var(--gunes)}
+#sifreMesaj{font-size:.85rem;min-height:1.2em;color:var(--gunes);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+
+/* dikişli kırmızı buton */
+.buton{
+  font-family:'Quicksand',sans-serif;font-weight:600;font-size:1rem;
+  padding:14px 32px;border-radius:10px;cursor:pointer;color:var(--krem);
+  background:linear-gradient(165deg,#b5473a,var(--kirmizi) 60%,var(--kirmizi-koyu));
+  border:none;outline:2px dashed rgba(250,243,227,.75);outline-offset:-6px;
+  box-shadow:0 8px 22px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .18s ease;
+}
+.buton:active{transform:scale(.95)}
+
+/* ============ 0. AÇILIŞ: TAM SAYFA FOTOĞRAF ============ */
+#acilis{padding:24px}
+.acilis-fon{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  background-image:linear-gradient(180deg, var(--cimen-koyu), var(--cimen) 70%);
+  animation:yavasZoom 9s ease-out forwards;
+}
+@keyframes yavasZoom{from{transform:scale(1.07)}to{transform:scale(1)}}
+.acilis-perde{position:absolute;inset:0;background:linear-gradient(180deg, rgba(8,20,11,.30) 0%, rgba(8,20,11,.42) 55%, rgba(8,20,11,.72) 100%)}
+#acilis > *:not(.acilis-fon):not(.acilis-perde){position:relative;z-index:2}
+.acilis-baslik{
+  font-family:'Pinyon Script',cursive;font-weight:400;
+  font-size:clamp(2.7rem,12vw,5.4rem);line-height:1.15;max-width:14ch;
+  text-shadow:0 3px 22px rgba(0,0,0,.75), 0 1px 4px rgba(0,0,0,.6);
+}
+.acilis-alt{font-family:'Caveat',cursive;font-size:clamp(1.3rem,5vw,1.9rem);color:var(--gunes);text-shadow:0 2px 10px rgba(0,0,0,.7)}
+#acilis .ok{position:absolute;bottom:26px;left:50%;transform:translateX(-50%)}
 
 /* ============ 1. BÖLÜM: PİKNİK SERME ============ */
 .kavis{width:min(560px,94vw);margin-bottom:-26px}
@@ -324,6 +382,158 @@ p{font-size:clamp(.95rem,3.6vw,1.08rem);max-width:560px;line-height:1.75;opacity
 #finalBaslik{font-family:'Pinyon Script',cursive;font-size:clamp(2.8rem,12vw,4.6rem);background:linear-gradient(90deg,var(--krem),var(--gunes),var(--krem));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:parla 4.5s linear infinite}
 @keyframes parla{to{background-position:200%}}
 
+/* ============ ZAMAN TÜNELİ (tam ekran galeri) ============ */
+body.tunelde{overflow:hidden;height:100svh}
+.tunel{
+  position:fixed;inset:0;z-index:120;display:none;flex-direction:column;
+  background:linear-gradient(180deg,var(--cimen-koyu),var(--cimen));
+}
+.tunel.acik{display:flex}
+.tunel-ust{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;flex-shrink:0;
+  background:rgba(10,24,14,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(250,243,227,.15);
+}
+.tunel-ust h2{font-family:'Pinyon Script',cursive;font-weight:400;font-size:clamp(1.7rem,6.5vw,2.4rem);color:var(--krem)}
+.kapat{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;cursor:pointer;
+  border:1px solid rgba(250,243,227,.35);background:rgba(250,243,227,.09);
+  color:var(--krem);font-size:1.15rem;line-height:1;
+  transition:background .15s, transform .1s;
+}
+.kapat:active{background:rgba(166,58,46,.5);transform:scale(.92)}
+.tunel-icerik{
+  overflow-y:auto;flex:1;width:100%;
+  padding:28px clamp(14px,4vw,32px) 70px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,86vw),1fr));
+  gap:30px 24px;align-items:start;
+  max-width:1100px;margin:0 auto;
+}
+.anikart{
+  position:relative;background:var(--kagit);border-radius:4px;
+  padding:12px 12px 14px;color:var(--murekkep);
+  box-shadow:0 14px 32px rgba(0,0,0,.45);
+}
+.anikart:nth-child(odd){transform:rotate(-1.1deg)}
+.anikart:nth-child(even){transform:rotate(1deg)}
+.anikart::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-2deg);width:84px;height:22px;background:rgba(233,182,76,.6);box-shadow:inset 0 0 6px rgba(0,0,0,.14)}
+.anikart img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;background:var(--cimen);display:block}
+.anikart .bos{aspect-ratio:4/3;border-radius:2px;background:var(--cimen);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-size:1.3rem;color:#cfe3c4;padding:16px;text-align:center}
+.anikart .tarih{font-family:'Quicksand',sans-serif;font-weight:600;font-size:1.04rem;letter-spacing:.3px;color:var(--kirmizi-koyu);margin:13px 2px 3px}
+.anikart .aciklama{font-family:'Caveat',cursive;font-size:1.28rem;line-height:1.35;color:var(--murekkep);padding:0 2px}
+
+/* ============ 8. BÖLÜM: HEDİYELER (dantel kart) ============ */
+#hediyeler{background:linear-gradient(180deg,#3f120d,var(--bordo) 60%,#4a150f)}
+.dantel{
+  position:relative;width:min(660px,94vw);
+  background:linear-gradient(160deg,#fcf7e9,var(--krem));
+  border:11px dotted #47130e;border-radius:26px;
+  padding:clamp(28px,6vw,48px) clamp(16px,4vw,40px);
+  box-shadow:0 28px 64px rgba(0,0,0,.55);
+  transform:rotate(-.5deg);
+}
+.dantel::after{content:"";position:absolute;inset:13px;border:1.5px dashed rgba(126,42,32,.5);border-radius:12px;pointer-events:none}
+.dantel-ust{font-family:'Pinyon Script',cursive;font-size:clamp(1.7rem,6.5vw,2.3rem);color:var(--kirmizi)}
+.dantel-alt{font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--kirmizi);margin-top:14px}
+.hediye-sira{display:flex;justify-content:center;align-items:flex-end;gap:clamp(16px,5vw,46px);flex-wrap:wrap;margin-top:30px}
+.hediye3{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:11px;
+  cursor:pointer;padding-top:34px;transition:transform .18s;
+}
+.hediye3:active{transform:scale(.93)}
+.hediye3.zipla{animation:hediyePop .5s ease}
+@keyframes hediyePop{30%{transform:scale(1.13) rotate(-2.5deg)}60%{transform:scale(.95)}}
+.hediye3 .ad{font-family:'Quicksand',sans-serif;font-weight:600;font-size:.92rem;letter-spacing:.6px;color:var(--murekkep)}
+.ucanlar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;gap:9px;pointer-events:none}
+.ucanlar span{font-size:1.15rem;animation:sallanUc 2.4s ease-in-out infinite}
+.ucanlar span:nth-child(2){animation-delay:.5s}
+.ucanlar span:nth-child(3){animation-delay:1.1s}
+@keyframes sallanUc{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(5deg)}}
+
+/* mini pasta */
+.mini-pasta{position:relative;width:96px;height:86px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+.mp-kat{position:absolute;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#fffdf4,#f3ead2);border-radius:6px}
+.mp-kat.k1{bottom:8px;width:96px;height:26px}
+.mp-kat.k2{bottom:32px;width:80px;height:22px}
+.mp-kat.k3{bottom:52px;width:62px;height:18px}
+.mp-recel{position:absolute;left:50%;transform:translateX(-50%);height:5px;border-radius:3px;background:linear-gradient(90deg,#b8503f,#d96a57)}
+.mp-recel.r1{bottom:31px;width:88px}
+.mp-recel.r2{bottom:51px;width:72px}
+.mp-cilekler{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:.95rem;letter-spacing:2px}
+.mp-tabak{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:110px;height:9px;border-radius:50px;background:linear-gradient(180deg,#efe6d0,#cdc0a2)}
+
+/* hediye kutuları */
+.kutu3{position:relative;width:94px;height:88px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+.kutu3 .gvd{position:absolute;bottom:0;left:0;right:0;height:62px;border-radius:7px;overflow:hidden}
+.kutu3 .kpk{position:absolute;bottom:54px;left:-7px;width:108px;height:21px;border-radius:5px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.18)}
+.kutu3 .serit{position:absolute;left:50%;transform:translateX(-50%);width:15px;top:0;bottom:0}
+.kutu3 .fiyonk{position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:44px;height:22px}
+.kutu3 .fiyonk::before,.kutu3 .fiyonk::after{content:"";position:absolute;top:2px;width:19px;height:17px}
+.kutu3 .fiyonk::before{left:0;border-radius:60% 0 60% 40%;transform:rotate(-16deg)}
+.kutu3 .fiyonk::after{right:0;border-radius:0 60% 40% 60%;transform:rotate(16deg)}
+.kutu3 .dugum{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;z-index:1}
+/* mavi kutu */
+.kutu-mavi .gvd{background:repeating-linear-gradient(90deg,#f2f6fb 0 12px,#9db8d6 12px 24px)}
+.kutu-mavi .kpk{background:repeating-linear-gradient(90deg,#e3ecf6 0 12px,#7fa0c4 12px 24px)}
+.kutu-mavi .serit{background:linear-gradient(90deg,#4a6f9b,#6f93bd 50%,#4a6f9b)}
+.kutu-mavi .fiyonk::before,.kutu-mavi .fiyonk::after{background:linear-gradient(150deg,#7fa0c4,#4a6f9b)}
+.kutu-mavi .dugum{background:#3c5c84}
+.kutu-mavi ~ .ucanlar span, .hediye3 .nota-renk{color:#4a6f9b}
+/* kırmızı kutu */
+.kutu-kirmizi .gvd{background:repeating-linear-gradient(90deg,#fbf2ef 0 12px,#d98d7f 12px 24px)}
+.kutu-kirmizi .kpk{background:repeating-linear-gradient(90deg,#f6e6e2 0 12px,#c86a5c 12px 24px)}
+.kutu-kirmizi .serit{background:linear-gradient(90deg,var(--kirmizi-koyu),#c15b4b 50%,var(--kirmizi-koyu))}
+.kutu-kirmizi .fiyonk::before,.kutu-kirmizi .fiyonk::after{background:linear-gradient(150deg,#c86a5c,var(--kirmizi-koyu))}
+.kutu-kirmizi .dugum{background:#6e2318}
+
+/* ============ LALE BUKETİ (video tarzı) ============ */
+.lale-katman{position:fixed;inset:0;pointer-events:none;z-index:125;overflow:hidden}
+.lale{
+  position:absolute;bottom:0;left:var(--x);width:var(--w);height:var(--h);
+  transform:translate(-50%,115%) rotate(var(--r0));transform-origin:50% 100%;
+  opacity:0;filter:drop-shadow(0 6px 12px rgba(0,0,0,.28));
+  animation:laleUc var(--sure) var(--gecikme) cubic-bezier(.22,.75,.3,1) forwards;
+}
+.lale svg,.lale img{width:100%;height:100%;display:block;object-fit:contain}
+@keyframes laleUc{
+  0%   {transform:translate(-50%,115%) rotate(var(--r0));opacity:0}
+  10%  {opacity:1}
+  38%  {transform:translate(-50%,-2.5%) rotate(var(--r1))}
+  50%  {transform:translate(-50%,0%)    rotate(var(--r2))}
+  64%  {transform:translate(-50%,-1.5%) rotate(var(--r1))}
+  78%  {opacity:1}
+  100% {transform:translate(-50%,118%) rotate(var(--r0));opacity:0}
+}
+@media (prefers-reduced-motion: reduce){.lale{animation-duration:.01s}}
+
+/* ============ HEDİYE SAYFASI (yazı modalı) ============ */
+.hediye-sayfa{
+  position:fixed;inset:0;z-index:118;display:none;
+  align-items:center;justify-content:center;padding:22px;
+  background:rgba(7,15,9,.62);backdrop-filter:blur(6px);
+}
+.hediye-sayfa.acik{display:flex}
+.hediye-kart{
+  position:relative;width:min(520px,94vw);max-height:80svh;overflow-y:auto;
+  background:
+    repeating-linear-gradient(transparent 0 33px, rgba(74,66,52,.16) 33px 34px),
+    linear-gradient(160deg,#fdf8ea,var(--krem));
+  color:var(--murekkep);border-radius:6px;
+  padding:40px 26px 26px;text-align:left;
+  font-family:'Caveat',cursive;font-size:1.42rem;line-height:34px;
+  box-shadow:0 26px 60px rgba(0,0,0,.6);
+  transform:rotate(-1deg);
+}
+.hediye-kart::before{
+  content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg);
+  width:112px;height:28px;background:rgba(233,182,76,.6);box-shadow:inset 0 0 6px rgba(0,0,0,.12);
+}
+.hediye-kart h3{font-family:'Pinyon Script',cursive;font-weight:400;font-size:clamp(1.9rem,7vw,2.5rem);color:var(--kirmizi);text-align:center;margin-bottom:12px;line-height:1.2}
+.hediye-kart .kapat{position:sticky;top:0;float:right;margin:-30px -8px 0 0;background:var(--kirmizi);border:none;color:var(--krem);width:38px;height:38px;font-size:1.05rem}
+.kart-laleleri{display:flex;justify-content:center;gap:4px;margin-top:16px}
+.kart-laleleri svg{width:30px;height:66px}
+
 canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 .muzik-dugme{position:fixed;top:16px;right:16px;z-index:95;width:44px;height:44px;border-radius:50%;border:1px solid rgba(250,243,227,.3);background:rgba(14,34,19,.6);color:var(--krem);font-size:1.1rem;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 @media (prefers-reduced-motion: reduce){
@@ -334,6 +544,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 </head>
 <body class="kilitli cimenli">
 
+<!-- kalp şekli için svg clip -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <clipPath id="kalpKlip" clipPathUnits="objectBoundingBox">
@@ -342,19 +553,35 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   </defs>
 </svg>
 
+<!-- ============ KİLİT ============ -->
 <div id="kilitKatman">
+  <div class="fon" id="kilitFon"></div>
+  <div class="perde"></div>
   <div class="kilit-baslik">Küçük bir sürprizim var</div>
-  <div class="kilit" id="kilitKart">
-    <div class="kilit-ust">🔒 Şifreyi gir</div>
-    <div class="nokta-sira">
-      <div class="snokta"></div><div class="snokta"></div><div class="snokta"></div><div class="snokta"></div>
+  <div class="asma-kilit" id="asmaKilit">
+    <div class="kanca"></div>
+    <div class="kilit-govde">
+      <div class="haneler">
+        <div class="hane"></div><div class="hane"></div><div class="hane"></div><div class="hane"></div>
+      </div>
+      <div class="delikk"></div>
     </div>
-    <div class="tus-takimi" id="tusTakimi"></div>
-    <div id="sifreMesaj"></div>
   </div>
+  <div class="tus-takimi" id="tusTakimi"></div>
+  <div id="sifreMesaj"></div>
   <p class="ipucu" id="sifreIpucu"></p>
 </div>
 
+<!-- ============ 0. AÇILIŞ ============ -->
+<section class="bolum" id="acilis">
+  <div class="acilis-fon" id="acilisFon"></div>
+  <div class="acilis-perde"></div>
+  <h1 class="acilis-baslik" id="acilisBaslik"></h1>
+  <div class="acilis-alt" id="acilisAlt"></div>
+  <div class="ok">⌄</div>
+</section>
+
+<!-- ============ 1. PİKNİK SERME ============ -->
 <section class="bolum" id="giris">
   <svg class="kavis belir" viewBox="0 0 560 150">
     <defs><path id="yay" d="M 16 128 Q 280 14 544 128"/></defs>
@@ -384,6 +611,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b4">⌄</div>
 </section>
 
+<!-- ============ 2. ŞARKI ============ -->
 <section class="bolum" id="sarki">
   <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)">Bana seni hatırlatan şarkı</div>
   <div class="sarki-duzen">
@@ -407,6 +635,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b3">⌄</div>
 </section>
 
+<!-- ============ 3. KALP MADALYON ============ -->
 <section class="bolum" id="madalyon">
   <div class="zemin potikare dikisli belir">
     <span class="madalyon-cicek" style="left:8px;top:-16px">🌻</span>
@@ -428,6 +657,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b4">⌄</div>
 </section>
 
+<!-- ============ 4. ZARF ============ -->
 <section class="bolum" id="zarfBolum">
   <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)" id="zarfBaslik"></div>
   <div class="zarf-ortu potikare dikisli belir b1">
@@ -445,6 +675,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b3">⌄</div>
 </section>
 
+<!-- ============ 5. MEKTUP ============ -->
 <section class="bolum" id="mektup">
   <div class="mektup-kagit belir">
     <span class="kose" style="left:-12px;top:-14px">🌼</span>
@@ -457,12 +688,62 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b2" style="color:var(--krem)">⌄</div>
 </section>
 
+<!-- ============ 6. POLAROİDLER ============ -->
 <section class="bolum" id="anilar">
   <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)">Anılarımız</div>
   <div class="polaroidler" id="polaroidler"></div>
+  <button class="buton belir b4" id="tunelAc">🕰️ Zaman Tünelini Aç</button>
   <div class="ok belir b5" style="color:var(--krem)">⌄</div>
 </section>
 
+<!-- ============ 8. HEDİYELER (dantel) ============ -->
+<section class="bolum" id="hediyeler">
+  <div class="dantel belir">
+    <div class="dantel-ust" id="hediyeUst"></div>
+    <div class="hediye-sira">
+      <div class="hediye3 belir b1" data-hediye="0">
+        <div class="ucanlar"><span>🍓</span><span>🕯️</span><span>🍒</span></div>
+        <div class="mini-pasta">
+          <div class="mp-tabak"></div>
+          <div class="mp-kat k1"></div><div class="mp-recel r1"></div>
+          <div class="mp-kat k2"></div><div class="mp-recel r2"></div>
+          <div class="mp-kat k3"></div>
+          <div class="mp-cilekler">🍓🍓🍓</div>
+        </div>
+        <div class="ad" id="hediyeAd0"></div>
+      </div>
+      <div class="hediye3 belir b2" data-hediye="1">
+        <div class="ucanlar" style="color:#8fb0d4"><span>♪</span><span>♫</span><span>♩</span></div>
+        <div class="kutu3 kutu-mavi">
+          <div class="gvd"></div><div class="serit"></div><div class="kpk"></div>
+          <div class="fiyonk"></div><div class="dugum"></div>
+        </div>
+        <div class="ad" id="hediyeAd1"></div>
+      </div>
+      <div class="hediye3 belir b3" data-hediye="2">
+        <div class="ucanlar"><span>🖼️</span><span>🎨</span><span>🖌️</span></div>
+        <div class="kutu3 kutu-kirmizi">
+          <div class="gvd"></div><div class="serit"></div><div class="kpk"></div>
+          <div class="fiyonk"></div><div class="dugum"></div>
+        </div>
+        <div class="ad" id="hediyeAd2"></div>
+      </div>
+    </div>
+    <div class="dantel-alt" id="hediyeAlt"></div>
+  </div>
+  <p class="ipucu belir b4">Hediyelere dokun 🌷</p>
+</section>
+
+<!-- ============ ZAMAN TÜNELİ GALERİSİ ============ -->
+<div class="tunel" id="tunel">
+  <div class="tunel-ust">
+    <h2 id="tunelBaslik"></h2>
+    <button class="kapat" id="tunelKapat" aria-label="Kapat">✕</button>
+  </div>
+  <div class="tunel-icerik" id="tunelIcerik"></div>
+</div>
+
+<!-- ============ 7. MANTAR PANO / FİNAL ============ -->
 <section class="bolum" id="final">
   <div class="pano belir">
     <span class="yildiz" style="left:16px;top:14px">★</span>
@@ -478,6 +759,17 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <p class="ipucu belir b4">Ekrana dokun 💚</p>
 </section>
 
+<div class="lale-katman" id="laleKatman"></div>
+
+<div class="hediye-sayfa" id="hediyeSayfa">
+  <div class="hediye-kart">
+    <button class="kapat" id="hediyeKapat" aria-label="Kapat">✕</button>
+    <h3 id="hediyeSayfaBaslik"></h3>
+    <div id="hediyeSayfaMetin"></div>
+    <div class="kart-laleleri" id="kartLaleleri"></div>
+  </div>
+</div>
+
 <canvas id="fx"></canvas>
 <button class="muzik-dugme" id="muzikBtn">🔊</button>
 <audio id="muzik" loop></audio>
@@ -489,11 +781,17 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 const AYAR = {
   sifre: "2407",
   sifreIpucu: "İpucu: bizim için önemli bir tarih 😉",   // "" yaparsan görünmez
+  kilitArkaplanFoto: "",   // Kilit ekranının arka plan fotoğrafı, örn: "arkaplan.jpg" (aynı klasöre koy)
+
+  // 0) Açılış — kilit açılınca gelen ilk ekran
+  acilisFoto: "",          // tüm sayfayı kaplayan fotoğraf, örn: "kapak.jpg" (boşsa yeşil zemin görünür)
+  acilisBaslik: "Doğum günün kutlu olsun bitanem 🎂",
+  acilisAlt: "aşağı kaydır, sürprizler seni bekliyor",
 
   // 1) Giriş
-  kavisYazi: "PİKNİK RANDEVUSU",       // tepedeki kavisli büyük yazı
-  girisAlt: "benimle... 🧺",
-  girisMetin: "Bugün senin günün aşkım. Sana ekranda küçük bir piknik hazırladım; aşağı kaydır, her şey seni bekliyor.",
+  kavisYazi: "FAV DATE",               // tepedeki kavisli büyük yazı
+  girisAlt: "seninle ♡",
+  girisMetin: "Bugün senin günün aşkım. Sana ekranda küçük bir sürpriz hazırladım; aşağı kaydır, her şey seni bekliyor.",
   kasetEtiket: "çalma listem ♡",
 
   // 2) Şarkı
@@ -519,18 +817,37 @@ const AYAR = {
   // 5) Mektup — paragrafları | ile ayır
   mektupBaslik: "Doğum Günün Kutlu Olsun Aşkım!",
   mektup: "Canım benim,|Bir yaş daha büyüdün ve ben hâlâ sana her baktığımda ilk günkü gibi heyecanlanıyorum. Bu siteyi senin için yaptım çünkü sana olan sevgimi anlatmaya kelimeler yetmiyor, ben de oturup kod yazdım.|Yeni yaşın sana sağlık, huzur ve bol bol kahkaha getirsin. En sade anlarımız, büyük kutlamalarımız, tüm günlerimiz... hepsinde yanındayım.|Nice mutlu senelere...",
-  imza: "— Seni çok loving sevgilin ❤️",
+  imza: "— Seni çok seven sevgilin ❤️",
 
-  // 6) Polaroidler
+  // 6) Anılar — Zaman Tüneli galerisi
+  // Her anı için: dosya (fotoğraf adı), tarih (kalın başlık), aciklama (altındaki yazı).
+  // 50 taneye kadar aynı kalıpla alt alta ekleyebilirsin; virgüllere dikkat, son satırda virgül olmasın.
+  // Ana sayfadaki polaroidlerde ilk 3 anı görünür, galeriye hepsi gelir.
+  galeriBaslik: "Zaman Tünelimiz 🕰️",
   fotograflar: [
-    { dosya: "", altyazi: "İlk fotoğrafımız 🥰" },
-    { dosya: "", altyazi: "En sevdiğim halin" },
-    { dosya: "", altyazi: "O gün çok güzeldin" }
+    { dosya: "", tarih: "24 Temmuz — Tanıştığımız Gün", aciklama: "Her şeyin başladığı o gün. İyi ki karşıma çıktın." },
+    { dosya: "", tarih: "İlk Fotoğrafımız", aciklama: "İkimiz de ne kadar heyecanlıydık, yüzümüzden okunuyor." },
+    { dosya: "", tarih: "İlk Tatilimiz", aciklama: "Deniz, güneş ve sen. Daha ne olsun." },
+    { dosya: "", tarih: "O Akşam", aciklama: "Saatlerce gülmekten karnımız ağrımıştı." },
+    { dosya: "", tarih: "Kış Günü", aciklama: "Soğukta bile içimi ısıtan tek şey sendin." },
+    { dosya: "", tarih: "Sıradan Bir Gün", aciklama: "Seninle sıradan günler bile özel." }
   ],
 
   // 7) Final panosu
   finalNot: "Umarım bu küçük sürpriz seni gülümsetmiştir. Her yaşında yanındayım. Seni çok seviyorum!",
-  cepNotu: "cebimde hep sen ♡"
+  cepNotu: "cebimde hep sen ♡",
+
+  // 8) Hediyeler (en sondaki dantel kart)
+  hediyeUst: "Bunlar",
+  hediyeAlt: "Sana özel hediyeler!",
+  hediyeAdlari: ["Pasta", "İlk Hediyem", "2. Hediyem"],
+  // Her hediyeye tıklanınca açılan sayfalar — metinde paragrafları | ile ayır:
+  hediyeSayfalari: [
+    { baslik: "🍰 Pasta", metin: "Buraya pastayla ilgili yazmak istediklerini yaz.|Mesela: bu pastayı sana kendi ellerimle yapacağım, dilimi büyük kesmeyi unutma..." },
+    { baslik: "🎁 İlk Hediyem", metin: "İlk hediyenle ilgili notun buraya.|Küçük bir ipucu bile yazabilirsin, açarken okusun." },
+    { baslik: "📝 2. Hediyem", metin: "İkinci hediyenin notu buraya.|İstediğin kadar paragraf ekleyebilirsin." }
+  ],
+  laleGorsel: ""   // İstersen kendi lale PNG'in (şeffaf zeminli), örn: "lale.png". Boşsa siteye çizdiğim buket laleleri uçar 🌷
 };
 /* ========================================================== */
 </script>
@@ -539,6 +856,9 @@ const AYAR = {
 const $ = s => document.querySelector(s);
 
 /* ---- içerik yerleştir ---- */
+$("#acilisBaslik").textContent = AYAR.acilisBaslik;
+$("#acilisAlt").textContent = AYAR.acilisAlt || "";
+if (AYAR.acilisFoto) $("#acilisFon").style.backgroundImage = `url('${AYAR.acilisFoto}')`;
 $("#kavisYazi").textContent = AYAR.kavisYazi;
 $("#kavisGolge").textContent = AYAR.kavisYazi;
 $("#girisAlt").textContent = AYAR.girisAlt;
@@ -577,16 +897,54 @@ AYAR.nedenler.forEach((metin, i) => {
   $("#notlar").appendChild(d);
 });
 
-/* polaroidler */
-AYAR.fotograflar.forEach((f, i) => {
+/* polaroidler: ana sayfada ilk 3 anı önizleme olarak görünür */
+AYAR.fotograflar.slice(0, 3).forEach((f, i) => {
   const k = document.createElement("div");
   k.className = "kart belir b" + Math.min(i + 1, 6);
-  k.innerHTML = `<div class="foto">${f.dosya ? `<img src="${f.dosya}" alt="">` : `<div class="yertutucu">Buraya fotoğrafımız gelecek ❤️<br>(${i + 1})</div>`}</div>
-                 <div class="altyazi">${f.altyazi || ""}</div>`;
+  k.innerHTML = `<div class="foto">${f.dosya ? `<img src="${f.dosya}" alt="" loading="lazy">` : `<div class="yertutucu">Buraya fotoğrafımız gelecek ❤️<br>(${i + 1})</div>`}</div>
+                 <div class="altyazi">${f.tarih || ""}</div>`;
   $("#polaroidler").appendChild(k);
 });
 
+/* ---- ZAMAN TÜNELİ GALERİSİ ---- */
+$("#tunelBaslik").textContent = AYAR.galeriBaslik;
+let tunelKuruldu = false;
+function tunelKur(){
+  if (tunelKuruldu) return;
+  tunelKuruldu = true;
+  const icerik = $("#tunelIcerik");
+  AYAR.fotograflar.forEach((f, i) => {
+    const a = document.createElement("div");
+    a.className = "anikart";
+    a.innerHTML = `${f.dosya
+        ? `<img src="${f.dosya}" alt="${f.tarih || "anı"}" loading="lazy">`
+        : `<div class="bos">Fotoğraf gelecek 💚 (${i + 1})</div>`}
+      <div class="tarih">${f.tarih || ""}</div>
+      <div class="aciklama">${f.aciklama || ""}</div>`;
+    icerik.appendChild(a);
+  });
+}
+function tunelAc(){
+  tunelKur();
+  $("#tunel").classList.add("acik");
+  document.body.classList.add("tunelde");
+}
+function tunelKapat(){
+  $("#tunel").classList.remove("acik");
+  document.body.classList.remove("tunelde");
+}
+$("#tunelAc").onclick = tunelAc;
+$("#tunelKapat").onclick = tunelKapat;
+addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#hediyeSayfa").classList.contains("acik")) hediyeSayfaKapat();
+  else if ($("#tunel").classList.contains("acik")) tunelKapat();
+});
+
 /* ---- ŞİFRE ---- */
+if (AYAR.kilitArkaplanFoto) {
+  $("#kilitFon").style.backgroundImage = `url('${AYAR.kilitArkaplanFoto}')`;
+}
 const tusTakimi = $("#tusTakimi");
 let girilen = "";
 [1,2,3,4,5,6,7,8,9,"sil",0,"tamam"].forEach(t => {
@@ -596,30 +954,35 @@ let girilen = "";
   b.onclick = () => tusBas(t);
   tusTakimi.appendChild(b);
 });
-function noktaGuncelle(){
-  document.querySelectorAll(".snokta").forEach((n, i) => n.classList.toggle("dolu", i < girilen.length));
+function haneGuncelle(){
+  document.querySelectorAll(".hane").forEach((h, i) => {
+    h.textContent = girilen[i] || "";
+    h.classList.toggle("dolu", i < girilen.length);
+  });
 }
 function tusBas(t){
   const msj = $("#sifreMesaj");
   if (t === "sil") { girilen = girilen.slice(0, -1); msj.textContent = ""; }
   else if (t === "tamam") { if (girilen.length === 4) kontrolEt(); }
   else if (girilen.length < 4) { girilen += t; msj.textContent = ""; }
-  noktaGuncelle();
+  haneGuncelle();
   if (girilen.length === 4 && t !== "tamam") setTimeout(kontrolEt, 250);
 }
 function kontrolEt(){
   if (girilen === AYAR.sifre) {
-    $("#sifreMesaj").textContent = "Doğru! Hoş geldin 🌻";
+    $("#sifreMesaj").textContent = "Doğru! Hoş geldin 🌷";
+    $("#asmaKilit").classList.add("acik");   // kanca yukarı atar
     konfeti(80);
+    laleFirlat();
     setTimeout(() => {
       $("#kilitKatman").classList.add("acildi");
       document.body.classList.remove("kilitli");
-    }, 800);
+    }, 1100);
   } else {
-    const kart = $("#kilitKart");
-    kart.classList.add("hata");
+    const kilit = $("#asmaKilit");
+    kilit.classList.add("hata");
     $("#sifreMesaj").textContent = "Olmadı, bir daha dene 🙈";
-    setTimeout(() => { kart.classList.remove("hata"); girilen = ""; noktaGuncelle(); }, 500);
+    setTimeout(() => { kilit.classList.remove("hata"); girilen = ""; haneGuncelle(); }, 500);
   }
 }
 
@@ -635,7 +998,7 @@ new IntersectionObserver(girenler => {
   girenler.forEach(g => {
     if (g.isIntersecting && !finalOldu) {
       finalOldu = true;
-      setTimeout(() => { konfeti(220); kalpModu = true; }, 500);
+      setTimeout(() => { konfeti(220); laleFirlat(); kalpModu = true; }, 500);
     }
   });
 }, { threshold: 0.4 }).observe($("#final"));
@@ -667,7 +1030,90 @@ $("#zarf").addEventListener("click", function(){
   setTimeout(() => $("#mektup").scrollIntoView({ behavior: "smooth" }), 2600);
 });
 
-/* ---- EFEKTLER: konfeti, kalpler, ateş böcekleri ---- */
+/* ---- HEDİYELER ---- */
+$("#hediyeUst").textContent = AYAR.hediyeUst;
+$("#hediyeAlt").textContent = AYAR.hediyeAlt;
+AYAR.hediyeAdlari.forEach((ad, i) => { const el = $("#hediyeAd" + i); if (el) el.textContent = ad; });
+
+/* ---- LALELER (video tarzı SVG buket) ---- */
+const lalePaletleri = [
+  ["#f6b9d0","#e07ba1","#b34d74"],   /* pembe   */
+  ["#e2685a","#c2453a","#8c261d"],   /* kırmızı */
+  ["#f8ead9","#e8c9a8","#c9a077"],   /* krem    */
+  ["#ef93ab","#d9587e","#a23557"]    /* gül     */
+];
+let laleSayac = 0;
+function laleSvg(palet){
+  const id = "lg" + (laleSayac++);
+  const [acik, orta, koyu] = palet;
+  return `<svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${acik}"/><stop offset="1" stop-color="${orta}"/>
+      </linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${orta}"/><stop offset="1" stop-color="${koyu}"/>
+      </linearGradient>
+      <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5d9a63"/><stop offset="1" stop-color="#35633c"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 96 C47 150 53 205 50 256" stroke="url(#${id}s)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+    <path d="M50 168 C24 158 8 190 16 224 C36 214 47 190 50 176 Z" fill="url(#${id}s)"/>
+    <path d="M50 196 C74 188 88 214 82 242 C62 234 53 214 50 204 Z" fill="url(#${id}s)" opacity=".92"/>
+    <path d="M50 98 C26 94 12 62 17 18 C33 34 44 44 50 62 Z" fill="url(#${id}b)"/>
+    <path d="M50 98 C74 94 88 62 83 18 C67 34 56 44 50 62 Z" fill="url(#${id}b)"/>
+    <path d="M50 100 C32 94 26 46 34 8 C42 24 58 24 66 8 C74 46 68 94 50 100 Z" fill="url(#${id}a)"/>
+    <path d="M50 100 C42 96 38 66 40 34 C46 48 54 48 60 34 C62 66 58 96 50 100 Z" fill="${acik}" opacity=".45"/>
+  </svg>`;
+}
+function laleFirlat(adet = 11){
+  const katman = $("#laleKatman");
+  for (let i = 0; i < adet; i++) {
+    const d = document.createElement("div");
+    d.className = "lale";
+    const merkezUzaklik = Math.abs(i - (adet - 1) / 2) / (adet / 2);   /* buket: ortadakiler uzun */
+    const yukseklik = 52 - merkezUzaklik * 16 + Math.random() * 5;      /* svh */
+    const genislik = yukseklik * 0.42;
+    d.style.setProperty("--x", (50 + (i - (adet - 1) / 2) * (7 + Math.random() * 2) + (Math.random() - .5) * 4) + "%");
+    d.style.setProperty("--h", yukseklik + "svh");
+    d.style.setProperty("--w", genislik + "svh");
+    d.style.setProperty("--r0", ((i - (adet - 1) / 2) * 2.4 + (Math.random() - .5) * 4) + "deg");
+    d.style.setProperty("--r1", ((i - (adet - 1) / 2) * 2.4 + 3) + "deg");
+    d.style.setProperty("--r2", ((i - (adet - 1) / 2) * 2.4 - 3) + "deg");
+    d.style.setProperty("--sure", (3.8 + Math.random() * .9) + "s");
+    d.style.setProperty("--gecikme", (i * .05 + Math.random() * .12) + "s");
+    d.innerHTML = AYAR.laleGorsel
+      ? `<img src="${AYAR.laleGorsel}" alt="">`
+      : laleSvg(lalePaletleri[Math.floor(Math.random() * lalePaletleri.length)]);
+    katman.appendChild(d);
+    d.addEventListener("animationend", () => d.remove());
+  }
+}
+
+/* ---- HEDİYE SAYFALARI ---- */
+function hediyeSayfaAc(i){
+  const s = AYAR.hediyeSayfalari[i] || { baslik: "", metin: "" };
+  $("#hediyeSayfaBaslik").textContent = s.baslik;
+  $("#hediyeSayfaMetin").innerHTML = (s.metin || "").split("|").map(p => `<p style="margin-bottom:8px">${p.trim()}</p>`).join("");
+  $("#kartLaleleri").innerHTML = laleSvg(lalePaletleri[1]) + laleSvg(lalePaletleri[0]) + laleSvg(lalePaletleri[3]);
+  $("#hediyeSayfa").classList.add("acik");
+  document.body.classList.add("tunelde");
+}
+function hediyeSayfaKapat(){
+  $("#hediyeSayfa").classList.remove("acik");
+  document.body.classList.remove("tunelde");
+}
+$("#hediyeKapat").onclick = hediyeSayfaKapat;
+$("#hediyeSayfa").addEventListener("click", e => { if (e.target.id === "hediyeSayfa") hediyeSayfaKapat(); });
+document.querySelectorAll(".hediye3").forEach(h => {
+  h.addEventListener("click", () => {
+    h.classList.remove("zipla"); void h.offsetWidth; h.classList.add("zipla");
+    laleFirlat();
+    setTimeout(() => hediyeSayfaAc(+h.dataset.hediye), 1000);
+  });
+});
+/* ---- EFEKTLER: konfeti, kalpler, laleler, ateş böcekleri ---- */
 const cv = $("#fx"), ctx = cv.getContext("2d");
 function boyutla(){ cv.width = innerWidth; cv.height = innerHeight; }
 boyutla(); addEventListener("resize", boyutla);
@@ -694,7 +1140,10 @@ function kalpEkle(x, y){
     renk: Math.random() < .3 ? "#e9b64c" : "#c6584a"
   });
 }
-addEventListener("pointerdown", e => { if (kalpModu) kalpEkle(e.clientX, e.clientY); });
+addEventListener("pointerdown", e => {
+  if (e.target.closest && e.target.closest(".hediye3")) return;   // hediye tıklamasında lale var, kalp basmasın
+  if (kalpModu) kalpEkle(e.clientX, e.clientY);
+});
 setInterval(() => { if (kalpModu && parcalar.length < 90) kalpEkle(Math.random()*cv.width, cv.height + 20); }, 450);
 function kalpCiz(x, y, r, alfa, renk){
   ctx.save(); ctx.translate(x, y); ctx.scale(r/16, r/16);
