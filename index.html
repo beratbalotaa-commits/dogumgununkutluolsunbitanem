@@ -636,6 +636,41 @@ body.tunelde{overflow:hidden;height:100svh}
 .video-kart .bos{aspect-ratio:16/9;border-radius:2px;background:var(--cimen);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-size:1.25rem;color:#cfe3c4;padding:12px;text-align:center}
 .video-kart .yazi{font-family:'Caveat',cursive;font-size:1.28rem;line-height:1.35;padding:9px 2px 0}
 
+/* ============ ANILAR: FİLM ŞERİDİ (yatay kaydırma) ============ */
+.serit-kutu{position:relative;width:100vw;max-width:100%}
+.film-serit{
+  display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:20px 11vw 26px;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.film-serit::-webkit-scrollbar{display:none}
+.serit-kart{
+  flex:0 0 min(76vw,330px);scroll-snap-align:center;position:relative;
+  background:var(--kagit);border-radius:4px;padding:12px 12px 13px;color:var(--murekkep);
+  box-shadow:0 16px 36px rgba(0,0,0,.45);
+}
+.serit-kart:nth-child(odd){transform:rotate(-1deg)}
+.serit-kart:nth-child(even){transform:rotate(.9deg)}
+.serit-kart::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-2deg);width:86px;height:22px;background:rgba(233,182,76,.6);box-shadow:inset 0 0 6px rgba(0,0,0,.14)}
+.serit-kart img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px;background:var(--cimen);display:block}
+.serit-kart .bos{aspect-ratio:3/4;border-radius:2px;background:var(--cimen);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-size:1.3rem;color:#cfe3c4;padding:14px;text-align:center}
+.serit-kart .tarih{font-family:'Quicksand',sans-serif;font-weight:600;font-size:1.02rem;letter-spacing:.3px;color:var(--kirmizi-koyu);margin:12px 2px 3px}
+.serit-kart .aciklama{font-family:'Caveat',cursive;font-size:1.26rem;line-height:1.32;color:var(--murekkep);padding:0 2px}
+.serit-sayac{font-family:'Quicksand',sans-serif;font-weight:600;font-size:.9rem;letter-spacing:1px;color:var(--gunes)}
+
+/* kilit perdesi */
+.serit-perde{
+  position:absolute;inset:0;z-index:5;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:rgba(10,22,13,.55);backdrop-filter:blur(13px);
+  transition:opacity .8s ease, visibility .8s;cursor:pointer;
+}
+.serit-perde.acildi{opacity:0;visibility:hidden}
+.serit-perde .buyuk-kilit{font-size:3rem;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.serit-perde .perde-yazi{font-family:'Caveat',cursive;font-size:1.5rem;color:var(--krem)}
+
 canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 .muzik-dugme{position:fixed;top:16px;right:16px;z-index:95;width:44px;height:44px;border-radius:50%;border:1px solid rgba(250,243,227,.3);background:rgba(14,34,19,.6);color:var(--krem);font-size:1.1rem;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 @media (prefers-reduced-motion: reduce){
@@ -790,12 +825,20 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="ok belir b2" style="color:var(--krem)">⌄</div>
 </section>
 
-<!-- ============ 6. POLAROİDLER ============ -->
+<!-- ============ 6. ANILAR: FİLM ŞERİDİ ============ -->
 <section class="bolum" id="anilar">
-  <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)">Anılarımız</div>
-  <div class="polaroidler" id="polaroidler"></div>
-  <button class="buton belir b4" id="tunelAc">🕰️ Zaman Tünelini Aç</button>
-  <div class="ok belir b5" style="color:var(--krem)">⌄</div>
+  <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)" id="anilarBaslik"></div>
+  <div class="serit-kutu belir b1">
+    <div class="film-serit" id="filmSerit"></div>
+    <div class="serit-perde" id="seritPerde">
+      <div class="buyuk-kilit">💚🔒</div>
+      <div class="perde-yazi" id="perdeYazi"></div>
+      <p class="ipucu">Açmak için dokun</p>
+    </div>
+  </div>
+  <div class="serit-sayac" id="seritSayac"></div>
+  <p class="ipucu">← Sağa sola kaydır →</p>
+  <div class="ok belir b3" style="color:var(--krem)">⌄</div>
 </section>
 
 <!-- ============ 6.5 EKSTRA SEKMELER ============ -->
@@ -862,14 +905,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <p class="ipucu" id="miniIpucu"></p>
 </div>
 
-<!-- ============ ZAMAN TÜNELİ GALERİSİ ============ -->
-<div class="tunel" id="tunel">
-  <div class="tunel-ust">
-    <h2 id="tunelBaslik"></h2>
-    <button class="kapat" id="tunelKapat" aria-label="Kapat">✕</button>
-  </div>
-  <div class="tunel-icerik" id="tunelIcerik"></div>
-</div>
+<!-- (Zaman Tüneli modalı kaldırıldı; anılar artık sayfadaki film şeridinde) -->
 
 <!-- ============ MİNİ ŞİFRE (anılar) ============ -->
 <div class="mini-sifre" id="miniSifre">
@@ -1090,7 +1126,7 @@ const AYAR = {
   // Çiçek animasyonu:
   // 1) VİDEO MODU (senin Gemini videon): dosya adını yaz, tetiklenince tam ekran oynar.
   //    cicek.mp4 ve cicek.webm dosyalarını siteyle aynı klasöre/repoya yükle.
-  cicekVideo: "cicek.mp4",
+  cicekVideo: "",   // video kapalı: çizilen çiçek duvarı kullanılıyor. Video istersen dosya adını yaz.
   // 2) ÇİZİM MODU: cicekVideo'yu "" yaparsan çizdiğim çiçek duvarı (gül+papatya+lale) kullanılır.
   //    İstersen kendi PNG çiçeklerini de verebilirsin:
   cicekGorselleri: [],          // örn: ["cicek1.png", "cicek2.png", "cicek3.png", "cicek4.png"]
@@ -1144,52 +1180,43 @@ AYAR.nedenler.forEach((metin, i) => {
   $("#notlar").appendChild(d);
 });
 
-/* polaroidler: ana sayfada ilk 3 anı önizleme olarak görünür */
-AYAR.fotograflar.slice(0, 3).forEach((f, i) => {
+/* ---- ANILAR: film şeridi ---- */
+$("#anilarBaslik").textContent = AYAR.galeriBaslik || "Anılarımız";
+$("#perdeYazi").textContent = AYAR.anilarSifreIpucu || "Şifreyi bilen görür";
+const filmSerit = $("#filmSerit");
+AYAR.fotograflar.forEach((f, i) => {
   const k = document.createElement("div");
-  k.className = "kart belir b" + Math.min(i + 1, 6);
-  k.innerHTML = `<div class="foto">${f.dosya ? `<img src="${f.dosya}" alt="" loading="lazy">` : `<div class="yertutucu">Buraya fotoğrafımız gelecek ❤️<br>(${i + 1})</div>`}</div>
-                 <div class="altyazi">${f.tarih || ""}</div>`;
-  $("#polaroidler").appendChild(k);
+  k.className = "serit-kart";
+  k.innerHTML = `${f.dosya
+      ? `<img src="${f.dosya}" alt="${f.tarih || "anı"}" loading="lazy">`
+      : `<div class="bos">Fotoğraf gelecek 💚 (${i + 1})</div>`}
+    <div class="tarih">${f.tarih || ""}</div>
+    ${f.aciklama ? `<div class="aciklama">${f.aciklama}</div>` : ""}`;
+  filmSerit.appendChild(k);
 });
-
-/* ---- ZAMAN TÜNELİ GALERİSİ ---- */
-$("#tunelBaslik").textContent = AYAR.galeriBaslik;
-let tunelKuruldu = false;
-function tunelKur(){
-  if (tunelKuruldu) return;
-  tunelKuruldu = true;
-  const icerik = $("#tunelIcerik");
-  AYAR.fotograflar.forEach((f, i) => {
-    const a = document.createElement("div");
-    a.className = "anikart";
-    a.innerHTML = `${f.dosya
-        ? `<img src="${f.dosya}" alt="${f.tarih || "anı"}" loading="lazy">`
-        : `<div class="bos">Fotoğraf gelecek 💚 (${i + 1})</div>`}
-      <div class="tarih">${f.tarih || ""}</div>
-      <div class="aciklama">${f.aciklama || ""}</div>`;
-    icerik.appendChild(a);
-  });
+function sayacGuncelle(){
+  const kartlar = filmSerit.children;
+  if (!kartlar.length) return;
+  const orta = filmSerit.scrollLeft + filmSerit.clientWidth / 2;
+  let enYakin = 0, enKucukFark = Infinity;
+  for (let i = 0; i < kartlar.length; i++) {
+    const merkez = kartlar[i].offsetLeft + kartlar[i].offsetWidth / 2;
+    const fark = Math.abs(merkez - orta);
+    if (fark < enKucukFark) { enKucukFark = fark; enYakin = i; }
+  }
+  $("#seritSayac").textContent = (enYakin + 1) + " / " + kartlar.length;
 }
-function tunelAc(){
-  tunelKur();
-  $("#tunel").classList.add("acik");
-  document.body.classList.add("tunelde");
+filmSerit.addEventListener("scroll", () => requestAnimationFrame(sayacGuncelle), { passive: true });
+sayacGuncelle();
+function serideAc(){
+  $("#seritPerde").classList.add("acildi");
+  laleFirlat();
 }
-function tunelKapat(){
-  $("#tunel").classList.remove("acik");
-  document.body.classList.remove("tunelde");
-}
-$("#tunelAc").onclick = () => {
-  if (anilarAcik) { tunelAc(); return; }
-  $("#miniKilitSayfa").classList.add("acik");
-};
-$("#tunelKapat").onclick = tunelKapat;
+$("#seritPerde").addEventListener("click", () => $("#miniKilitSayfa").classList.add("acik"));
 addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
   if ($("#miniKilitSayfa").classList.contains("acik")) $("#miniKilitSayfa").classList.remove("acik");
   else if ($("#hediyeSayfa").classList.contains("acik")) hediyeSayfaKapat();
-  else if ($("#tunel").classList.contains("acik")) tunelKapat();
 });
 
 /* ---- ŞİFRE ---- */
@@ -1293,7 +1320,7 @@ function miniKontrol(){
       $("#miniKilitSayfa").classList.remove("acik");
       $("#miniAsma").classList.remove("acik");
       girilenM = ""; miniHane(); $("#miniMesaj").textContent = "";
-      tunelAc();
+      serideAc();
     }, 1000);
   } else {
     $("#miniAsma").classList.add("hata");
@@ -1568,4 +1595,3 @@ dongu();
 </script>
 </body>
 </html>
-
