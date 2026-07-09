@@ -435,7 +435,7 @@ body.tunelde{overflow:hidden;height:100svh}
 }
 .dantel::after{content:"";position:absolute;inset:13px;border:1.5px dashed rgba(126,42,32,.5);border-radius:12px;pointer-events:none}
 .dantel-ust{font-family:'Pinyon Script',cursive;font-size:clamp(1.7rem,6.5vw,2.3rem);color:var(--kirmizi)}
-.dantel-alt{font-family:'Pinyon Script',cursive;font-size:clamp(2 Basin,8vw,3rem);color:var(--kirmizi);margin-top:14px}
+.dantel-alt{font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--kirmizi);margin-top:14px}
 .hediye-sira{display:flex;justify-content:center;align-items:flex-end;gap:clamp(16px,5vw,46px);flex-wrap:wrap;margin-top:30px}
 .hediye3{
   position:relative;display:flex;flex-direction:column;align-items:center;gap:11px;
@@ -487,25 +487,31 @@ body.tunelde{overflow:hidden;height:100svh}
 .kutu-kirmizi .fiyonk::before,.kutu-kirmizi .fiyonk::after{background:linear-gradient(150deg,#c86a5c,var(--kirmizi-koyu))}
 .kutu-kirmizi .dugum{background:#6e2318}
 
-/* ============ LALE BUKETİ (video tarzı) ============ */
+/* ============ ÇİÇEK DUVARI (video tarzı) ============ */
 .lale-katman{position:fixed;inset:0;pointer-events:none;z-index:125;overflow:hidden}
-.lale{
-  position:absolute;bottom:0;left:var(--x);width:var(--w);height:var(--h);
-  transform:translate(-50%,115%) rotate(var(--r0));transform-origin:50% 100%;
-  opacity:0;filter:drop-shadow(0 6px 12px rgba(0,0,0,.28));
-  animation:laleUc var(--sure) var(--gecikme) cubic-bezier(.22,.75,.3,1) forwards;
+.cicek{
+  position:absolute;left:var(--x);top:var(--y);width:var(--w);aspect-ratio:1;
+  transform:translate(-50%,-50%) scale(0) rotate(var(--r0));
+  opacity:0;will-change:transform,opacity;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.22));
+  animation:cicekAc var(--sure) var(--gecikme) cubic-bezier(.24,.9,.32,1.15) forwards;
 }
-.lale svg,.lale img{width:100%;height:100%;display:block;object-fit:contain}
-@keyframes laleUc{
-  0%   {transform:translate(-50%,115%) rotate(var(--r0));opacity:0}
+.cicek svg,.cicek img{width:100%;height:100%;display:block;object-fit:contain}
+.cicek-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .65s ease;
+}
+.cicek-video.gorunur{opacity:1}
+@keyframes cicekAc{
+  0%   {transform:translate(-50%,-50%) scale(0) rotate(var(--r0));opacity:0}
   10%  {opacity:1}
-  38%  {transform:translate(-50%,-2.5%) rotate(var(--r1))}
-  50%  {transform:translate(-50%,0%)    rotate(var(--r2))}
-  64%  {transform:translate(-50%,-1.5%) rotate(var(--r1))}
-  78%  {opacity:1}
-  100% {transform:translate(-50%,118%) rotate(var(--r0));opacity:0}
+  30%  {transform:translate(-50%,-50%) scale(1.08) rotate(var(--r1))}
+  40%  {transform:translate(-50%,-50%) scale(1) rotate(var(--r1))}
+  72%  {transform:translate(-50%,-52%) scale(1) rotate(var(--r1));opacity:1}
+  100% {transform:translate(-50%,-58%) scale(.9) rotate(var(--r0));opacity:0}
 }
-@media (prefers-reduced-motion: reduce){.lale{animation-duration:.01s}}
+/* buket modu: hediye kartı süsündeki mini laleler .kart-laleleri kuralında */
+@media (prefers-reduced-motion: reduce){.cicek{animation-duration:.01s}}
 
 /* ============ HEDİYE SAYFASI (yazı modalı) ============ */
 .hediye-sayfa{
@@ -544,7 +550,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 </head>
 <body class="kilitli cimenli">
 
-<!-- küt şekli için svg clip -->
+<!-- kalp şekli için svg clip -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <clipPath id="kalpKlip" clipPathUnits="objectBoundingBox">
@@ -780,29 +786,29 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
    ========================================================== */
 const AYAR = {
   sifre: "2407",
-  sifreIpucu: "İpucu: Bizim için en özel tarih 😉",   
-  kilitArkaplanFoto: "",   
+  sifreIpucu: "İpucu: bizim için önemli bir tarih 😉",   // "" yaparsan görünmez
+  kilitArkaplanFoto: "",   // Kilit ekranının arka plan fotoğrafı, örn: "arkaplan.jpg" (aynı klasöre koy)
 
   // 0) Açılış — kilit açılınca gelen ilk ekran
-  acilisFoto: "",          
+  acilisFoto: "",          // tüm sayfayı kaplayan fotoğraf, örn: "kapak.jpg" (boşsa yeşil zemin görünür)
   acilisBaslik: "Doğum günün kutlu olsun bitanem 🎂",
-  acilisAlt: "Aşağı kaydır, sürprizler seni bekliyor",
+  acilisAlt: "aşağı kaydır, sürprizler seni bekliyor",
 
   // 1) Giriş
-  kavisYazi: "FAV DATE",               
-  girisAlt: "Seninle ♡",
-  girisMetin: "Bugün tamamen senin günün aşkım. Sana ekranda küçük bir anı yolculuğu hazırladım; aşağı kaydır, her detay seni bekliyor.",
-  kasetEtiket: "Çalma listem ♡",
+  kavisYazi: "FAV DATE",               // tepedeki kavisli büyük yazı
+  girisAlt: "seninle ♡",
+  girisMetin: "Bugün senin günün aşkım. Sana ekranda küçük bir sürpriz hazırladım; aşağı kaydır, her şey seni bekliyor.",
+  kasetEtiket: "çalma listem ♡",
 
   // 2) Şarkı
   sarkiAdi: "Bizim Şarkımız",
   sarkiSanatci: "Sanatçı",
-  youtubeId: "",   
-  muzik: "",       
+  youtubeId: "",   // Örn: "dQw4w9WgXcQ" → YouTube videosu gömülür. Boşsa şık bir kart görünür
+  muzik: "",       // mp3 dosya adı (aynı klasöre koy) → plak dönerken çalar
 
   // 3) Kalp madalyon
-  kalpFoto1: "",   
-  kalpFoto2: "",   
+  kalpFoto1: "",   // sol kalpteki fotoğraf dosya adı
+  kalpFoto2: "",   // sağ kalpteki fotoğraf dosya adı
   nedenler: [
     "Gülüşünü seviyorum, her şeyi güzelleştiriyor",
     "Yanında kendim olabildiğim için seviyorum",
@@ -814,80 +820,47 @@ const AYAR = {
   zarfBaslik: "Sana bir şey yazdım",
   zarfNotu: "Doğum günün kutlu olsun aşkım 🌻 Aşağı kaydır, mektubun orada...",
 
-  // 5) Mektup
+  // 5) Mektup — paragrafları | ile ayır
   mektupBaslik: "Doğum Günün Kutlu Olsun Aşkım!",
-  mektup: "Canım benim,|Bir yaş daha büyüdün ve ben hâlâ sana her baktığımda ilk günkü gibi heyecanlanıyorum. Bu siteyi senin için yaptım çünkü sana olan sevgimi anlatmaya bazen kelimeler yetmiyor, ben de oturup kod yazdım.|Yeni yaşın sana sağlık, huzur ve bol bol kahkaha getirsin. En sade anlarımız, büyük kutlamalarımız, tüm günlerimiz... hepsinde yanındayım.|Nice mutlu senelere...",
+  mektup: "Canım benim,|Bir yaş daha büyüdün ve ben hâlâ sana her baktığımda ilk günkü gibi heyecanlanıyorum. Bu siteyi senin için yaptım çünkü sana olan sevgimi anlatmaya kelimeler yetmiyor, ben de oturup kod yazdım.|Yeni yaşın sana sağlık, huzur ve bol bol kahkaha getirsin. En sade anlarımız, büyük kutlamalarımız, tüm günlerimiz... hepsinde yanındayım.|Nice mutlu senelere...",
   imza: "— Seni çok seven sevgilin ❤️",
 
-  // 6) Anılar — Zaman Tüneli galerisi (Tam 50 Adet Eksiksiz)
+  // 6) Anılar — Zaman Tüneli galerisi
+  // Her anı için: dosya (fotoğraf adı), tarih (kalın başlık), aciklama (altındaki yazı).
+  // 50 taneye kadar aynı kalıpla alt alta ekleyebilirsin; virgüllere dikkat, son satırda virgül olmasın.
+  // Ana sayfadaki polaroidlerde ilk 3 anı görünür, galeriye hepsi gelir.
   galeriBaslik: "Zaman Tünelimiz 🕰️",
   fotograflar: [
-    { dosya: "ani1.jpg", tarih: "1. İlk Tanıştığımız Gün", aciklama: "Her şeyin başladığı o an. Hayatımın dönüm noktası olacağını biliyordum." },
-    { dosya: "ani2.jpg", tarih: "2. İlk Kahve Randevumuz", aciklama: "Heyecandan ellerimin titrediği, kahve bardağını nasıl tutacağımı şaşırdığım o tatlı gün." },
-    { dosya: "ani3.jpg", tarih: "3. İlk Fotoğrafımız", aciklama: "İkimiz de ne kadar heyecanlıydık, yüzümüzdeki o tatlı çekingenlik hâlâ dün gibi." },
-    { dosya: "ani4.jpg", tarih: "4. Yağmurlu Bir Gün", aciklama: "Sırılsıklam olmamıza rağmen birlikte şemsiyenin altında dünyanın en mutlu insanlarıydık." },
-    { dosya: "ani5.jpg", tarih: "5. İlk Sahil Yürüyüşümüz", aciklama: "Deniz kokusu, hafif bir rüzgar ve elini ilk kez tuttuğum o unutulmaz an." },
-    { dosya: "ani6.jpg", tarih: "6. Beraber İlk Film Gecemiz", aciklama: "Filmi izlemekten çok senin gülüşünü, yüzündeki her bir ifadeyi izlemeyi seçtiğim gece." },
-    { dosya: "ani7.jpg", tarih: "7. Sınav Haftası Dayanışması", aciklama: "Kütüphanede sabahladığımız, kahve bardakları arasında birbirimize güç verdiğimiz anlar." },
-    { dosya: "ani8.jpg", tarih: "8. İlk Tatilimiz", aciklama: "Deniz, güneş ve yanımda dünyanın en güzel kadını. Zaman dursun istemiştim." },
-    { dosya: "ani9.jpg", tarih: "9. Gün Batımını İzlerken", aciklama: "Gökyüzü binbir renge boyanırken benim gözlerim sadece senin parıltındaydı." },
-    { dosya: "ani10.jpg", tarih: "10. İlk Akşam Yemeğimiz", aciklama: "Şık bir masa, loş ışıklar ve karşımda tüm zarafetiyle oturan bir melek." },
-    { dosya: "ani11.jpg", tarih: "11. Sürpriz Buluşma", aciklama: "Seni ansızın karşımda gördüğümde kalbimin nasıl hızlandığını dün gibi hatırlıyorum." },
-    { dosya: "ani12.jpg", tarih: "12. Parkta Piknik Keyfi", aciklama: "Çimenlerin üzerine uzanıp gökyüzünü izlerken kurduğumuz o güzel hayaller." },
-    { dosya: "ani13.jpg", tarih: "13. İlk Konserimiz", aciklama: "Şarkılara avazımız çıktığı kadar eşlik ederken birbirimize bakıp gülüştüğümüz an." },
-    { dosya: "ani14.jpg", tarih: "14. Sabah Yürüyüşü", aciklama: "Güneş henüz yeni doğarken seninle temiz havayı içimize çektiğimiz huzurlu anlar." },
-    { dosya: "ani15.jpg", tarih: "15. Kışın İlk Karı", aciklama: "Soğukta ellerimiz buz tutmuşken birbirimizi ısıtan o sıcacık sarılmamız." },
-    { dosya: "ani16.jpg", tarih: "16. Uzun Yol Yolculuğu", aciklama: "Arabada en sevdiğimiz şarkıları son ses açıp yol alırken hayatın güzelliğini hissettik." },
-    { dosya: "ani17.jpg", tarih: "17. Pazar Kahvaltısı", aciklama: "Birlikte hazırladığımız en tatlı, en neşeli ve bol sohbetli sabah sofralarından biri." },
-    { dosya: "ani18.jpg", tarih: "18. Lunapark Eğlencesi", aciklama: "Çocuklar gibi şen olduğumuz, her oyuncakta ayrı bir kahkaha attığımız neşeli gün." },
-    { dosya: "ani19.jpg", tarih: "19. Geçen Yılki Doğum Günün", aciklama: "Mumları üflerken yüzünde beliren o mutluluk benim için dünyalara bedeldi." },
-    { dosya: "ani20.jpg", tarih: "20. İlk Dansımız", aciklama: "Zamanın tamamen durduğu, etraftaki herkesin silindiği ve sadece ikimizin kaldığı o an." },
-    { dosya: "ani21.jpg", tarih: "21. Sıradan Ama Özel Bir Gün", aciklama: "Hiçbir şey yapmasak bile seninle yan yana olmanın yettiği huzurlu anlardan biri." },
-    { dosya: "ani22.jpg", tarih: "22. Fotoğraf Çekimi Macerası", aciklama: "Bana poz verirken attığın o doğal, içten kahkahayı yakaladığım o güzel kare." },
-    { dosya: "ani23.jpg", tarih: "23. Tarihi Sokaklar", aciklama: "Eski şehrin taş sokaklarında el ele kaybolduğumuz o büyülü öğleden sonra." },
-    { dosya: "ani24.jpg", tarih: "24. Mutfak Savaşları", aciklama: "Birlikte yemek yapmaya çalışırken unlara bulandığımız en eğlenceli anlarımızdan biri." },
-    { dosya: "ani25.jpg", tarih: "25. Gece Yürüyüşü", aciklama: "Şehrin ışıkları altında, sessizce yürüyüp sadece huzuru paylaştığımız sakin bir an." },
-    { dosya: "ani26.jpg", tarih: "26. İlk Yıldönümümüz", aciklama: "Koca bir yılı devirdiğimiz, aşkımızın her geçen gün büyüdüğünü kutladığımız o gün." },
-    { dosya: "ani27.jpg", tarih: "27. Deniz Kenarında Kahve", aciklama: "Dalga sesleri eşliğinde geleceğe dair kurduğumuz en samimi ve sıcak hayaller." },
-    { dosya: "ani28.jpg", tarih: "28. Müze Gezisi", aciklama: "Sanat eserlerini incelerken benim en büyük sanat eserine, yani sana baktığım gün." },
-    { dosya: "ani29.jpg", tarih: "29. Yorgun Bir Akşam", aciklama: "Omuzumda uyuyakaldığın, saçlarının kokusunu içime çektiğim en huzurlu an." },
-    { dosya: "ani30.jpg", tarih: "30. Birlikte İlk Alışverişimiz", aciklama: "Küçük detaylar seçerken bile ne kadar ortak zevkimiz olduğunu gördüğümüz gün." },
-    { dosya: "ani31.jpg", tarih: "31. Başarı Kutlaması", aciklama: "Başarılarını gururla izlediğim ve seninle bir kez daha gurur duyduğum o özel akşam." },
-    { dosya: "ani32.jpg", tarih: "32. Doğa Yürüyüşü", aciklama: "Yeşillikler arasında, kuş sesleri eşliğinde el ele adımladığımız güzel patikalar." },
-    { dosya: "ani33.jpg", tarih: "33. İçten Bir Sarılma", aciklama: "Kelimelerin bittiği yerde, sarılarak birbirimize dünyaları verdiğimiz o an." },
-    { dosya: "ani34.jpg", tarih: "34. Kitapçı Keşfi", aciklama: "En sevdiğimiz kitapları birbirimize gösterirken zamanın nasıl geçtiğini anlamadık." },
-    { dosya: "ani35.jpg", tarih: "35. Yağmur Sonrası Gökyüzü", aciklama: "Beliren gökkuşağı kadar renkli ve güzel sevgilimle harika bir yürüyüş." },
-    { dosya: "ani36.jpg", tarih: "36. Uzun Ayrılık Sonrası Kavuşma", aciklama: "Kavuştuğumuz o ilk saniye, özlemin bittiği ve dünyanın yeniden dönmeye başladığı an." },
-    { dosya: "ani37.jpg", tarih: "37. Sahilde Simit-Çay", aciklama: "En basit anların bile seninle ne kadar kıymetli olabileceğinin en büyük kanıtı." },
-    { dosya: "ani38.jpg", tarih: "38. Sinema Çıkışı", aciklama: "Film hakkında heyecanla konuşurken gözlerinde gördüğüm o çocuksu neşe." },
-    { dosya: "ani39.jpg", tarih: "39. Yıldızları İzlerken", aciklama: "Gecenin karanlığında gökyüzünü izleyip içimizden aynı dileği tuttuğumuz an." },
-    { dosya: "ani40.jpg", tarih: "40. İlk Hediyeleşme", aciklama: "Hediyemi açarken gözlerinde beliren o tatlı şaşkınlık ve mutluluk." },
-    { dosya: "ani41.jpg", tarih: "41. Huzurlu Bir Pazar", aciklama: "Evde tembellik yaparken bile yanımda olmanın verdiği o tarifsiz güven duygusu." },
-    { dosya: "ani42.jpg", tarih: "42. Yol Manzaraları", aciklama: "Pencereden dışarıyı izlerken bile profilinin ne kadar kusursuz olduğunu düşündüğüm an." },
-    { dosya: "ani43.jpg", tarih: "43. Birlikte İlk Çayımız", aciklama: "Sıcacık bir bardak çay eşliğinde saatlerce süren o derin ve anlamlı sohbetimiz." },
-    { dosya: "ani44.jpg", tarih: "44. Komik Bir An", aciklama: "Birlikte kahkahalara boğulduğumuz, gülmekten gözümüzden yaş gelen o çılgın an." },
-    { dosya: "ani45.jpg", tarih: "45. Akşam Güneşi", aciklama: "Yüzüne vuran son güneş ışıklarıyla güzelliğine bir kez daha büyülendiğim o an." },
-    { dosya: "ani46.jpg", tarih: "46. Tiyatro Gecesi", aciklama: "Kültür dolu, şık ve seninle yan yana olmanın keyfini çıkardığım güzel bir akşam." },
-    { dosya: "ani47.jpg", tarih: "47. Hafif Bir Kar Yağışı", aciklama: "Saçlarına düşen kar tanelerini tek tek temizlediğim o tatlı ve korumacı anı." },
-    { dosya: "ani48.jpg", tarih: "48. Çalışma Masamız", aciklama: "Yan yana işlerimizi yaparken ara sıra birbirimize bakıp gülümsediğimiz anlar." },
-    { dosya: "ani49.jpg", tarih: "49. Gelecek Planları", aciklama: "İleride kuracağımız yuvanın hayallerini kurarken gözlerinde beliren o parlak ışık." },
-    { dosya: "ani50.jpg", tarih: "50. Ve Bugün...", aciklama: "Yeni yaşında da, sonraki tüm yaşlarında da hep el ele, hep aşkla kalacağız sevgilim." }
+    { dosya: "", tarih: "24 Temmuz — Tanıştığımız Gün", aciklama: "Her şeyin başladığı o gün. İyi ki karşıma çıktın." },
+    { dosya: "", tarih: "İlk Fotoğrafımız", aciklama: "İkimiz de ne kadar heyecanlıydık, yüzümüzden okunuyor." },
+    { dosya: "", tarih: "İlk Tatilimiz", aciklama: "Deniz, güneş ve sen. Daha ne olsun." },
+    { dosya: "", tarih: "O Akşam", aciklama: "Saatlerce gülmekten karnımız ağrımıştı." },
+    { dosya: "", tarih: "Kış Günü", aciklama: "Soğukta bile içimi ısıtan tek şey sendin." },
+    { dosya: "", tarih: "Sıradan Bir Gün", aciklama: "Seninle sıradan günler bile özel." }
   ],
 
   // 7) Final panosu
   finalNot: "Umarım bu küçük sürpriz seni gülümsetmiştir. Her yaşında yanındayım. Seni çok seviyorum!",
   cepNotu: "cebimde hep sen ♡",
 
-  // 8) Hediyeler
+  // 8) Hediyeler (en sondaki dantel kart)
   hediyeUst: "Bunlar",
   hediyeAlt: "Sana özel hediyeler!",
   hediyeAdlari: ["Pasta", "İlk Hediyem", "2. Hediyem"],
+  // Her hediyeye tıklanınca açılan sayfalar — metinde paragrafları | ile ayır:
   hediyeSayfalari: [
     { baslik: "🍰 Pasta", metin: "Buraya pastayla ilgili yazmak istediklerini yaz.|Mesela: bu pastayı sana kendi ellerimle yapacağım, dilimi büyük kesmeyi unutma..." },
     { baslik: "🎁 İlk Hediyem", metin: "İlk hediyenle ilgili notun buraya.|Küçük bir ipucu bile yazabilirsin, açarken okusun." },
     { baslik: "📝 2. Hediyem", metin: "İkinci hediyenin notu buraya.|İstediğin kadar paragraf ekleyebilirsin." }
   ],
-  laleGorsel: ""   
+  // Çiçek animasyonu:
+  // 1) VİDEO MODU (senin Gemini videon): dosya adını yaz, tetiklenince tam ekran oynar.
+  //    cicek.mp4 ve cicek.webm dosyalarını siteyle aynı klasöre/repoya yükle.
+  cicekVideo: "cicek.mp4",
+  // 2) ÇİZİM MODU: cicekVideo'yu "" yaparsan çizdiğim çiçek duvarı (gül+papatya+lale) kullanılır.
+  //    İstersen kendi PNG çiçeklerini de verebilirsin:
+  cicekGorselleri: [],          // örn: ["cicek1.png", "cicek2.png", "cicek3.png", "cicek4.png"]
+  laleGorsel: ""                // (eski ayar, tek görsel; cicekGorselleri boşsa bu kullanılır)
 };
 /* ========================================================== */
 </script>
@@ -994,19 +967,6 @@ let girilen = "";
   b.onclick = () => tusBas(t);
   tusTakimi.appendChild(b);
 });
-
-/* Klavye ile yazabilme desteği */
-addEventListener("keydown", e => {
-  if ($("#kilitKatman").classList.contains("acildi")) return;
-  if (e.key >= "0" && e.key <= "9") {
-    tusBas(parseInt(e.key));
-  } else if (e.key === "Backspace") {
-    tusBas("sil");
-  } else if (e.key === "Enter") {
-    tusBas("tamam");
-  }
-});
-
 function haneGuncelle(){
   document.querySelectorAll(".hane").forEach((h, i) => {
     h.textContent = girilen[i] || "";
@@ -1024,7 +984,7 @@ function tusBas(t){
 function kontrolEt(){
   if (girilen === AYAR.sifre) {
     $("#sifreMesaj").textContent = "Doğru! Hoş geldin 🌷";
-    $("#asmaKilit").classList.add("acik");   
+    $("#asmaKilit").classList.add("acik");   // kanca yukarı atar
     konfeti(80);
     laleFirlat();
     setTimeout(() => {
@@ -1088,28 +1048,23 @@ $("#hediyeUst").textContent = AYAR.hediyeUst;
 $("#hediyeAlt").textContent = AYAR.hediyeAlt;
 AYAR.hediyeAdlari.forEach((ad, i) => { const el = $("#hediyeAd" + i); if (el) el.textContent = ad; });
 
-/* ---- LALELER (video tarzı SVG buket) ---- */
+/* ---- ÇİÇEK DUVARI (video tarzı: ekranı kaplayıp kaybolan çiçekler) ---- */
 const lalePaletleri = [
-  ["#f6b9d0","#e07ba1","#b34d74"],   
-  ["#e2685a","#c2453a","#8c261d"],   
-  ["#f8ead9","#e8c9a8","#c9a077"],   
-  ["#ef93ab","#d9587e","#a23557"]    
+  ["#f6b9d0","#e07ba1","#b34d74"],   /* pembe    */
+  ["#e2685a","#c2453a","#8c261d"],   /* kırmızı  */
+  ["#f8ead9","#e8c9a8","#c9a077"],   /* krem     */
+  ["#b9c3ee","#8291d6","#5a68a8"],   /* leylak   */
+  ["#f4c15e","#e0993a","#b06f1e"]    /* sarı     */
 ];
-let laleSayac = 0;
+let cicekSayac = 0;
 function laleSvg(palet){
-  const id = "lg" + (laleSayac++);
+  const id = "cg" + (cicekSayac++);
   const [acik, orta, koyu] = palet;
   return `<svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="${acik}"/><stop offset="1" stop-color="${orta}"/>
-      </linearGradient>
-      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="${orta}"/><stop offset="1" stop-color="${koyu}"/>
-      </linearGradient>
-      <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#5d9a63"/><stop offset="1" stop-color="#35633c"/>
-      </linearGradient>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${acik}"/><stop offset="1" stop-color="${orta}"/></linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${orta}"/><stop offset="1" stop-color="${koyu}"/></linearGradient>
+      <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d9a63"/><stop offset="1" stop-color="#35633c"/></linearGradient>
     </defs>
     <path d="M50 96 C47 150 53 205 50 256" stroke="url(#${id}s)" stroke-width="5.5" fill="none" stroke-linecap="round"/>
     <path d="M50 168 C24 158 8 190 16 224 C36 214 47 190 50 176 Z" fill="url(#${id}s)"/>
@@ -1120,29 +1075,99 @@ function laleSvg(palet){
     <path d="M50 100 C42 96 38 66 40 34 C46 48 54 48 60 34 C62 66 58 96 50 100 Z" fill="${acik}" opacity=".45"/>
   </svg>`;
 }
-function laleFirlat(adet = 11){
+function gulSvg(palet){
+  const id = "cg" + (cicekSayac++);
+  const [acik, orta, koyu] = palet;
+  let dis = "", ic = "";
+  for (let i = 0; i < 8; i++)
+    dis += `<path d="M50 4 C66 8 76 26 68 42 C60 32 54 28 50 24 Z" fill="${i % 2 ? orta : acik}" transform="rotate(${i * 45} 50 50)"/>`;
+  for (let i = 0; i < 6; i++)
+    ic += `<path d="M50 20 C60 23 66 34 61 44 C56 37 52 34 50 31 Z" fill="${i % 2 ? koyu : orta}" transform="rotate(${i * 60 + 22} 50 50)"/>`;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="47" fill="${orta}" opacity=".28"/>
+    ${dis}${ic}
+    <circle cx="50" cy="50" r="15" fill="${koyu}"/>
+    <path d="M50 50 c7 -3 10 6 3 9 c-9 4 -15 -7 -3 -13 c13 -6 21 10 5 18" stroke="${acik}" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+function papatyaSvg(){
+  const id = "cg" + (cicekSayac++);
+  let t = "";
+  for (let i = 0; i < 12; i++)
+    t += `<ellipse cx="50" cy="16" rx="9" ry="19" fill="${i % 2 ? "#ffffff" : "#f6f1e4"}" transform="rotate(${i * 30} 50 50)"/>`;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${t}
+    <circle cx="50" cy="50" r="15" fill="#e9b64c"/>
+    <circle cx="45" cy="46" r="2.4" fill="#c88f2a"/><circle cx="55" cy="49" r="2.4" fill="#c88f2a"/>
+    <circle cx="49" cy="55" r="2.4" fill="#c88f2a"/><circle cx="53" cy="43" r="1.8" fill="#c88f2a"/>
+  </svg>`;
+}
+function tomurcukSvg(palet){
+  const id = "cg" + (cicekSayac++);
+  const [acik, orta, koyu] = palet;
+  let t = "";
+  for (let i = 0; i < 5; i++)
+    t += `<path d="M50 12 C63 14 66 32 50 40 C34 32 37 14 50 12 Z" fill="${i % 2 ? orta : acik}" transform="rotate(${i * 72} 50 50)"/>`;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${t}
+    <circle cx="50" cy="50" r="10" fill="${koyu}"/><circle cx="47" cy="47" r="3.5" fill="${acik}" opacity=".8"/>
+  </svg>`;
+}
+function rastgeleCicek(){
+  if (cicekGorselleri.length)
+    return `<img src="${cicekGorselleri[Math.floor(Math.random() * cicekGorselleri.length)]}" alt="">`;
+  const palet = lalePaletleri[Math.floor(Math.random() * lalePaletleri.length)];
+  const z = Math.random();
+  if (z < .38) return gulSvg(palet);
+  if (z < .58) return papatyaSvg();
+  if (z < .8)  return tomurcukSvg(palet);
+  return laleSvg(palet);
+}
+let cicekVideoEl = null, cicekVideoBozuk = false;
+function cicekVideoOynat(){
+  if (!cicekVideoEl) {
+    cicekVideoEl = document.createElement("video");
+    cicekVideoEl.className = "cicek-video";
+    cicekVideoEl.muted = true;
+    cicekVideoEl.playsInline = true;
+    cicekVideoEl.setAttribute("playsinline", "");
+    cicekVideoEl.preload = "auto";
+    cicekVideoEl.src = AYAR.cicekVideo;
+    cicekVideoEl.addEventListener("ended", () => {
+      cicekVideoEl.classList.remove("gorunur");
+      setTimeout(() => cicekVideoEl.pause(), 700);
+    });
+    cicekVideoEl.addEventListener("error", () => { cicekVideoBozuk = true; });
+    $("#laleKatman").appendChild(cicekVideoEl);
+  }
+  cicekVideoEl.currentTime = 0;
+  const soz = cicekVideoEl.play();
+  cicekVideoEl.classList.add("gorunur");
+  if (soz) soz.catch(() => { cicekVideoBozuk = true; cicekVideoEl.classList.remove("gorunur"); cicekDuvari(); });
+}
+function laleFirlat(){
+  if (AYAR.cicekVideo && !cicekVideoBozuk) { cicekVideoOynat(); return; }
+  cicekDuvari();
+}
+function cicekDuvari(adet = 64){
   const katman = $("#laleKatman");
   for (let i = 0; i < adet; i++) {
     const d = document.createElement("div");
-    d.className = "lale";
-    const merkezUzaklik = Math.abs(i - (adet - 1) / 2) / (adet / 2);   
-    const yukseklik = 52 - merkezUzaklik * 16 + Math.random() * 5;      
-    const genislik = yukseklik * 0.42;
-    d.style.setProperty("--x", (50 + (i - (adet - 1) / 2) * (7 + Math.random() * 2) + (Math.random() - .5) * 4) + "%");
-    d.style.setProperty("--h", yukseklik + "svh");
-    d.style.setProperty("--w", genislik + "svh");
-    d.style.setProperty("--r0", ((i - (adet - 1) / 2) * 2.4 + (Math.random() - .5) * 4) + "deg");
-    d.style.setProperty("--r1", ((i - (adet - 1) / 2) * 2.4 + 3) + "deg");
-    d.style.setProperty("--r2", ((i - (adet - 1) / 2) * 2.4 - 3) + "deg");
-    d.style.setProperty("--sure", (3.8 + Math.random() * .9) + "s");
-    d.style.setProperty("--gecikme", (i * .05 + Math.random() * .12) + "s");
-    d.innerHTML = AYAR.laleGorsel
-      ? `<img src="${AYAR.laleGorsel}" alt="">`
-      : laleSvg(lalePaletleri[Math.floor(Math.random() * lalePaletleri.length)]);
+    d.className = "cicek";
+    d.style.setProperty("--x", (Math.random() * 104 - 2) + "%");
+    d.style.setProperty("--y", (Math.random() * 106 - 3) + "%");
+    d.style.setProperty("--w", (9 + Math.random() * 15) + "vmin");
+    const r = (Math.random() - .5) * 50;
+    d.style.setProperty("--r0", r + "deg");
+    d.style.setProperty("--r1", (r + (Math.random() - .5) * 10) + "deg");
+    d.style.setProperty("--sure", (4.4 + Math.random() * 1.2) + "s");
+    d.style.setProperty("--gecikme", (Math.random() * 1.1) + "s");
+    d.innerHTML = rastgeleCicek();
     katman.appendChild(d);
     d.addEventListener("animationend", () => d.remove());
   }
 }
+const cicekGorselleri = (AYAR.cicekGorselleri || []).filter(Boolean);
+if (!cicekGorselleri.length && AYAR.laleGorsel) cicekGorselleri.push(AYAR.laleGorsel);
+cicekGorselleri.forEach(src => { const im = new Image(); im.src = src; });   /* ön yükleme */
 
 /* ---- HEDİYE SAYFALARI ---- */
 function hediyeSayfaAc(i){
@@ -1194,7 +1219,7 @@ function kalpEkle(x, y){
   });
 }
 addEventListener("pointerdown", e => {
-  if (e.target.closest && e.target.closest(".hediye3")) return;   
+  if (e.target.closest && e.target.closest(".hediye3")) return;   // hediye tıklamasında lale var, kalp basmasın
   if (kalpModu) kalpEkle(e.clientX, e.clientY);
 });
 setInterval(() => { if (kalpModu && parcalar.length < 90) kalpEkle(Math.random()*cv.width, cv.height + 20); }, 450);
