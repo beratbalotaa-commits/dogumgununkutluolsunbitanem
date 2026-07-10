@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doğum Günün kutlu olsun Bitanem ❤️</title>
+<title>Piknik Randevusu 🧺</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@500;700&family=Pinyon+Script&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -671,6 +671,45 @@ body.tunelde{overflow:hidden;height:100svh}
 .serit-perde .buyuk-kilit{font-size:3rem;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
 .serit-perde .perde-yazi{font-family:'Caveat',cursive;font-size:1.5rem;color:var(--krem)}
 
+/* ============ ALBÜMLER: kapaklar + tam ekran kaydırmalı sayfa ============ */
+.album-kapaklar{display:flex;gap:clamp(16px,4vw,34px);flex-wrap:wrap;justify-content:center}
+.album-kapak{
+  position:relative;width:min(240px,72vw);cursor:pointer;
+  background:var(--kagit);border-radius:4px;padding:12px 12px 14px;color:var(--murekkep);
+  box-shadow:0 16px 38px rgba(0,0,0,.45);transition:transform .18s;
+}
+.album-kapak:active{transform:scale(.95)}
+.album-kapak:nth-child(odd){transform:rotate(-1.6deg)}
+.album-kapak:nth-child(even){transform:rotate(1.4deg)}
+.album-kapak::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-2deg);width:86px;height:22px;background:rgba(233,182,76,.6);box-shadow:inset 0 0 6px rgba(0,0,0,.14)}
+.album-kapak .on-yuz{aspect-ratio:1;border-radius:2px;background:linear-gradient(160deg,var(--cimen-acik),var(--cimen));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.album-kapak .on-yuz .simge{font-size:3rem;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.album-kapak .on-yuz .adet{font-family:'Quicksand',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:1px;color:var(--krem);opacity:.9}
+.album-kapak .kapak-ad{font-family:'Caveat',cursive;font-weight:700;font-size:1.3rem;text-align:center;padding-top:9px;line-height:1.2}
+
+.album-sayfa{
+  position:fixed;inset:0;z-index:119;display:none;flex-direction:column;
+  background:linear-gradient(180deg,var(--cimen-koyu),var(--cimen));
+}
+.album-sayfa.acik{display:flex}
+.album-ust{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;flex-shrink:0;
+  background:rgba(10,24,14,.85);backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(250,243,227,.15);
+}
+.album-ust h2{font-family:'Pinyon Script',cursive;font-weight:400;font-size:clamp(1.5rem,6vw,2.2rem);color:var(--krem);line-height:1.1}
+.album-orta{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:0}
+.album-orta .film-serit{width:100%}
+.serit-kart.video-tip{flex:0 0 min(86vw,430px)}
+.serit-kart.video-tip video{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:2px;background:#0d0d0d;display:block}
+.serit-kart.video-tip .bos{aspect-ratio:16/9;font-size:1.25rem}
+.serit-kart .no{
+  position:absolute;top:-9px;left:-8px;z-index:2;width:27px;height:27px;border-radius:50%;
+  background:var(--kirmizi);color:var(--krem);font-weight:600;font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 7px rgba(0,0,0,.35);
+}
+
 canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 .muzik-dugme{position:fixed;top:16px;right:16px;z-index:95;width:44px;height:44px;border-radius:50%;border:1px solid rgba(250,243,227,.3);background:rgba(14,34,19,.6);color:var(--krem);font-size:1.1rem;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 @media (prefers-reduced-motion: reduce){
@@ -887,6 +926,19 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <p class="ipucu belir b4">Hediyelere dokun 🌷</p>
 </section>
 
+<!-- ============ ALBÜM SAYFASI (tam ekran, kaydırmalı) ============ -->
+<div class="album-sayfa" id="albumSayfa">
+  <div class="album-ust">
+    <h2 id="albumBaslik"></h2>
+    <button class="kapat" id="albumKapat" aria-label="Kapat">✕</button>
+  </div>
+  <div class="album-orta">
+    <div class="film-serit" id="albumSerit"></div>
+    <div class="serit-sayac" id="albumSayac"></div>
+    <p class="ipucu">← Sağa sola kaydır →</p>
+  </div>
+</div>
+
 <!-- ============ MİNİ KİLİT (Zaman Tüneli şifresi) ============ -->
 <div class="mini-kilit-sayfa" id="miniKilitSayfa">
   <button class="kapat" id="miniKapat" aria-label="Kapat">✕</button>
@@ -938,18 +990,21 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
   <div class="izgara-icerik" id="videoIcerik"></div>
 </div>
 
-<!-- ============ 6b. 2 YAŞ BÜYÜK ============ -->
-<section class="bolum" id="yas">
-  <div class="yas-baslik belir" id="yasBaslik"></div>
-  <div class="yas-galeri" id="yasGaleri"></div>
-  <div class="ok belir" style="color:var(--krem)">⌄</div>
-</section>
-
-<!-- ============ 6c. VİDEOLARIMIZ ============ -->
-<section class="bolum" id="videolar">
-  <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)" id="videoBaslik"></div>
-  <div class="video-galeri" id="videoGaleri"></div>
-  <div class="ok belir" style="color:var(--krem)">⌄</div>
+<!-- ============ 6b. ALBÜMLER ============ -->
+<section class="bolum" id="albumler">
+  <div class="altbaslik zarif belir" style="font-family:'Pinyon Script',cursive;font-size:clamp(2rem,8vw,3rem);color:var(--krem)">Albümlerimiz</div>
+  <div class="album-kapaklar">
+    <div class="album-kapak belir b1" id="kapakYas">
+      <div class="on-yuz"><div class="simge">📸</div><div class="adet" id="yasAdet"></div></div>
+      <div class="kapak-ad" id="yasKapakAd"></div>
+    </div>
+    <div class="album-kapak belir b2" id="kapakVideo">
+      <div class="on-yuz"><div class="simge">🎬</div><div class="adet" id="videoAdet"></div></div>
+      <div class="kapak-ad" id="videoKapakAd"></div>
+    </div>
+  </div>
+  <p class="ipucu belir b3">Kapağa dokun, albüm açılsın</p>
+  <div class="ok belir b4" style="color:var(--krem)">⌄</div>
 </section>
 
 <!-- ============ 7. MANTAR PANO / FİNAL ============ -->
@@ -1194,20 +1249,7 @@ AYAR.fotograflar.forEach((f, i) => {
     ${f.aciklama ? `<div class="aciklama">${f.aciklama}</div>` : ""}`;
   filmSerit.appendChild(k);
 });
-function sayacGuncelle(){
-  const kartlar = filmSerit.children;
-  if (!kartlar.length) return;
-  const orta = filmSerit.scrollLeft + filmSerit.clientWidth / 2;
-  let enYakin = 0, enKucukFark = Infinity;
-  for (let i = 0; i < kartlar.length; i++) {
-    const merkez = kartlar[i].offsetLeft + kartlar[i].offsetWidth / 2;
-    const fark = Math.abs(merkez - orta);
-    if (fark < enKucukFark) { enKucukFark = fark; enYakin = i; }
-  }
-  $("#seritSayac").textContent = (enYakin + 1) + " / " + kartlar.length;
-}
-filmSerit.addEventListener("scroll", () => requestAnimationFrame(sayacGuncelle), { passive: true });
-sayacGuncelle();
+sayacBagla(filmSerit, $("#seritSayac"));
 function serideAc(){
   $("#seritPerde").classList.add("acildi");
   laleFirlat();
@@ -1216,6 +1258,7 @@ $("#seritPerde").addEventListener("click", () => $("#miniKilitSayfa").classList.
 addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
   if ($("#miniKilitSayfa").classList.contains("acik")) $("#miniKilitSayfa").classList.remove("acik");
+  else if ($("#albumSayfa").classList.contains("acik")) albumKapat();
   else if ($("#hediyeSayfa").classList.contains("acik")) hediyeSayfaKapat();
 });
 
@@ -1264,28 +1307,69 @@ function kontrolEt(){
   }
 }
 
-/* ---- 2 YAŞ BÜYÜK bölümü ---- */
-$("#yasBaslik").textContent = AYAR.yasBaslik;
-AYAR.yasFotolari.forEach((f, i) => {
-  const k = document.createElement("div");
-  k.className = "yas-kart belir b" + ((i % 6) + 1);
-  k.innerHTML = `<div class="no">${i + 1}</div>
-    ${f.dosya ? `<img src="${f.dosya}" alt="" loading="lazy">` : `<div class="bos">Fotoğraf ${i + 1}</div>`}
-    ${f.yazi ? `<div class="yazi">${f.yazi}</div>` : ""}`;
-  $("#yasGaleri").appendChild(k);
-});
+/* ---- ALBÜMLER: kapaklar + tam ekran kaydırmalı sayfa ---- */
+$("#yasKapakAd").textContent = AYAR.yasBaslik;
+$("#videoKapakAd").textContent = AYAR.videoBaslik;
+$("#yasAdet").textContent = AYAR.yasFotolari.length + " FOTOĞRAF";
+$("#videoAdet").textContent = AYAR.videolar.length + " VİDEO";
 
-/* ---- VİDEOLARIMIZ bölümü ---- */
-$("#videoBaslik").textContent = AYAR.videoBaslik;
-AYAR.videolar.forEach((v, i) => {
-  const k = document.createElement("div");
-  k.className = "video-kart belir b" + ((i % 4) + 1);
-  k.innerHTML = `${v.dosya
-      ? `<video src="${v.dosya}" controls playsinline preload="metadata"></video>`
-      : `<div class="bos">Video ${i + 1} buraya gelecek 🎬</div>`}
-    <div class="yazi">${v.yazi || ""}</div>`;
-  $("#videoGaleri").appendChild(k);
-});
+function sayacBagla(seritEl, sayacEl){
+  function guncelle(){
+    const kartlar = seritEl.children;
+    if (!kartlar.length) return;
+    const orta = seritEl.scrollLeft + seritEl.clientWidth / 2;
+    let enYakin = 0, enKucukFark = Infinity;
+    for (let i = 0; i < kartlar.length; i++) {
+      const merkez = kartlar[i].offsetLeft + kartlar[i].offsetWidth / 2;
+      const fark = Math.abs(merkez - orta);
+      if (fark < enKucukFark) { enKucukFark = fark; enYakin = i; }
+    }
+    sayacEl.textContent = (enYakin + 1) + " / " + kartlar.length;
+  }
+  seritEl.addEventListener("scroll", () => requestAnimationFrame(guncelle), { passive: true });
+  guncelle();
+  return guncelle;
+}
+const albumSayacGuncelle = sayacBagla($("#albumSerit"), $("#albumSayac"));
+
+function albumAc(tip){
+  const serit = $("#albumSerit");
+  serit.innerHTML = "";
+  if (tip === "yas") {
+    $("#albumBaslik").textContent = AYAR.yasBaslik;
+    AYAR.yasFotolari.forEach((f, i) => {
+      const k = document.createElement("div");
+      k.className = "serit-kart";
+      k.innerHTML = `<div class="no">${i + 1}</div>
+        ${f.dosya ? `<img src="${f.dosya}" alt="" loading="lazy">` : `<div class="bos">Fotoğraf ${i + 1}</div>`}
+        ${f.yazi ? `<div class="aciklama">${f.yazi}</div>` : ""}`;
+      serit.appendChild(k);
+    });
+  } else {
+    $("#albumBaslik").textContent = AYAR.videoBaslik;
+    AYAR.videolar.forEach((v, i) => {
+      const k = document.createElement("div");
+      k.className = "serit-kart video-tip";
+      k.innerHTML = `${v.dosya
+          ? `<video src="${v.dosya}" controls playsinline preload="metadata"></video>`
+          : `<div class="bos">Video ${i + 1} buraya gelecek 🎬</div>`}
+        <div class="yazi aciklama">${v.yazi || ""}</div>`;
+      serit.appendChild(k);
+    });
+  }
+  serit.scrollLeft = 0;
+  $("#albumSayfa").classList.add("acik");
+  document.body.classList.add("tunelde");
+  albumSayacGuncelle();
+}
+function albumKapat(){
+  $("#albumSayfa").classList.remove("acik");
+  document.body.classList.remove("tunelde");
+  document.querySelectorAll("#albumSerit video").forEach(v => v.pause());
+}
+$("#kapakYas").onclick = () => albumAc("yas");
+$("#kapakVideo").onclick = () => albumAc("video");
+$("#albumKapat").onclick = albumKapat;
 
 /* ---- MİNİ KİLİT: Zaman Tüneli şifresi ---- */
 $("#miniIpucu").textContent = AYAR.anilarSifreIpucu || "";
