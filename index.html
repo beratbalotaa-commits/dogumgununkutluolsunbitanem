@@ -1173,7 +1173,7 @@ const AYAR = {
   anilarSifre: "1302",
   anilarSifreIpucu: "first kiss 😘",
   // Her anı için: dosya (fotoğraf adı), tarih (kalın başlık), aciklama (altındaki yazı).
-  // 50 yer hazır — sadece dosya adlarını ve yazıları doldur. Son satır hariç virgüllere dikkat.
+  // 62 yer hazır — sadece dosya adlarını ve yazıları doldur. Son satır hariç virgüllere dikkat.
   galeriBaslik: "Zaman Tünelimiz 🕰️",
   fotograflar: [
     { dosya: "ani-1.jpg", tarih: "Anı 1 — Tanıştığımız Gün", aciklama: "Her şeyin başladığı o gün." },
@@ -1225,18 +1225,36 @@ const AYAR = {
     { dosya: "ani-47.jpeg", tarih: "Anı 47", aciklama: "" },
     { dosya: "ani-48.jpeg", tarih: "Anı 48", aciklama: "" },
     { dosya: "ani-49.jpeg", tarih: "Anı 49", aciklama: "" },
-    { dosya: "ani-50.jpeg", tarih: "Anı 50", aciklama: "" }
+    { dosya: "ani-50.jpeg", tarih: "Anı 50", aciklama: "" },
+    { dosya: "ani-51.jpeg", tarih: "Anı 51", aciklama: "" },
+    { dosya: "ani-52.jpeg", tarih: "Anı 52", aciklama: "" },
+    { dosya: "ani-53.jpeg", tarih: "Anı 53", aciklama: "" },
+    { dosya: "ani-54.jpeg", tarih: "Anı 54", aciklama: "" },
+    { dosya: "ani-55.jpeg", tarih: "Anı 55", aciklama: "" },
+    { dosya: "ani-56.jpeg", tarih: "Anı 56", aciklama: "" },
+    { dosya: "ani-57.jpeg", tarih: "Anı 57", aciklama: "" },
+    { dosya: "ani-58.jpeg", tarih: "Anı 58", aciklama: "" },
+    { dosya: "ani-59.jpeg", tarih: "Anı 59", aciklama: "" },
+    { dosya: "ani-60.jpeg", tarih: "Anı 60", aciklama: "" },
+    { dosya: "ani-61.jpeg", tarih: "Anı 61", aciklama: "" },
+    { dosya: "ani-62.jpeg", tarih: "Anı 62", aciklama: "" }
   ],
 
-  // 6b) "BİTANEM ARTIK 2 YAŞ BÜYÜK" bölümü — 22 sıralı fotoğraf
+  // 6b) "BİTANEM ARTIK 2 YAŞ BÜYÜK" albümü — 9 fotoğraf + 3 video (sıralı)
   yasBaslik: "BİTANEM ARTIK 2 YAŞ BÜYÜK",
   yasFotolari: [
-    { dosya: "yas-1.jpeg", yazi: "" }, { dosya: "yas-2.jpeg", yazi: "" }, { dosya: "yas-3.jpeg", yazi: "" }, { dosya: "yas-4.jpeg", yazi: "" },
-    { dosya: "yas-5.jpeg", yazi: "" }, { dosya: "yas-6.jpeg", yazi: "" }, { dosya: "yas-7.jpeg", yazi: "" }, { dosya: "yas-8.jpeg", yazi: "" },
-    { dosya: "yas-9.jpeg", yazi: "" }, { dosya: "yas-10.jpeg", yazi: "" }, { dosya: "yas-11.jpeg", yazi: "" }, { dosya: "yas-12.jpeg", yazi: "" },
-    { dosya: "yas-13.jpeg", yazi: "" }, { dosya: "yas-14.jpeg", yazi: "" }, { dosya: "yas-15.jpeg", yazi: "" }, { dosya: "yas-16.jpeg", yazi: "" },
-    { dosya: "yas-17.jpeg", yazi: "" }, { dosya: "yas-18.jpeg", yazi: "" }, { dosya: "yas-19.jpeg", yazi: "" }, { dosya: "yas-20.jpeg", yazi: "" },
-    { dosya: "yas-21.jpeg", yazi: "" }, { dosya: "yas-22.jpeg", yazi: "" }
+    { dosya: "yas-1.jpeg", yazi: "" },
+    { dosya: "yas-2.jpeg", yazi: "" },
+    { dosya: "yas-3.jpeg", yazi: "" },
+    { dosya: "yas-4.jpeg", yazi: "" },
+    { dosya: "yas-5.jpeg", yazi: "" },
+    { dosya: "yas-6.jpeg", yazi: "" },
+    { dosya: "yas-7.jpeg", yazi: "" },
+    { dosya: "yas-8.jpeg", yazi: "" },
+    { dosya: "yas-9.jpeg", yazi: "" },
+    { dosya: "yas-video-1.mp4", yazi: "" },
+    { dosya: "yas-video-2.mp4", yazi: "" },
+    { dosya: "yas-video-3.mp4", yazi: "" }
   ],
 
   // 6c) Videolarımız bölümü — 10 video, altlarına yazı yazabilirsin
@@ -1262,7 +1280,8 @@ const AYAR = {
     { dosya: "erasmus-3.jpeg", baslik: "3. Durak", yazi: "" },
     { dosya: "erasmus-4.jpeg", baslik: "4. Durak", yazi: "" },
     { dosya: "erasmus-5.jpeg", baslik: "5. Durak", yazi: "" },
-    { dosya: "erasmus-6.jpeg", baslik: "6. Durak — Ve devamı...", yazi: "" }
+    { dosya: "erasmus-6.jpeg", baslik: "6. Durak", yazi: "" },
+    { dosya: "erasmus-7.jpeg", baslik: "7. Durak — Ve devamı...", yazi: "" }
   ],
 
 
@@ -1411,7 +1430,11 @@ function kontrolEt(){
 /* ---- ALBÜMLER: kapaklar + tam ekran kaydırmalı sayfa ---- */
 $("#yasKapakAd").textContent = AYAR.yasBaslik;
 $("#videoKapakAd").textContent = AYAR.videoBaslik;
-$("#yasAdet").textContent = AYAR.yasFotolari.length + " FOTOĞRAF";
+const yasVideoSayisi = AYAR.yasFotolari.filter(f => /\.(mp4|webm|mov)$/i.test(f.dosya || "")).length;
+const yasFotoSayisi = AYAR.yasFotolari.length - yasVideoSayisi;
+$("#yasAdet").textContent = yasVideoSayisi
+  ? `${yasFotoSayisi} FOTO · ${yasVideoSayisi} VİDEO`
+  : `${yasFotoSayisi} FOTOĞRAF`;
 $("#videoAdet").textContent = AYAR.videolar.length + " VİDEO";
 
 function sayacBagla(seritEl, sayacEl){
@@ -1440,9 +1463,14 @@ function albumAc(tip){
     $("#albumBaslik").textContent = AYAR.yasBaslik;
     AYAR.yasFotolari.forEach((f, i) => {
       const k = document.createElement("div");
-      k.className = "serit-kart";
+      const videoMu = /\.(mp4|webm|mov)$/i.test(f.dosya || "");
+      k.className = "serit-kart" + (videoMu ? " video-tip" : "");
       k.innerHTML = `<div class="no">${i + 1}</div>
-        ${f.dosya ? `<img src="${f.dosya}" alt="" loading="lazy">` : `<div class="bos">Fotoğraf ${i + 1}</div>`}
+        ${f.dosya
+          ? (videoMu
+              ? `<video src="${f.dosya}" controls playsinline preload="metadata"></video>`
+              : `<img src="${f.dosya}" alt="" loading="lazy">`)
+          : `<div class="bos">Fotoğraf ${i + 1}</div>`}
         ${f.yazi ? `<div class="aciklama">${f.yazi}</div>` : ""}`;
       serit.appendChild(k);
     });
