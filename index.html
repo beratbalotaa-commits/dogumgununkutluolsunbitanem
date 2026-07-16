@@ -946,6 +946,7 @@ table.takvim{width:100%;border-collapse:collapse;table-layout:fixed}
   filter:drop-shadow(0 8px 14px rgba(0,0,0,.3));
 }
 .takvim-pasta{position:absolute;right:-38%;bottom:-16%;width:84%;z-index:3;pointer-events:none}
+.takvim-foto.kesik{border-radius:0;aspect-ratio:auto;object-fit:contain;width:160%;left:-32%;bottom:-8%}
 .takvim-not{align-self:flex-end;font-family:'Caveat',cursive;font-weight:700;font-size:clamp(1.25rem,4.8vw,1.6rem);color:#c2453a;transform:rotate(-2.5deg);margin-top:2px}
 
 /* Fav Date: fotoğraflı zemin */
@@ -1244,7 +1245,7 @@ const AYAR = {
   takvimGunAdlari: ["PZT","SAL","ÇAR","PER","CUM","CMT","PAZ"],
   takvimHaftalar: [[13,14,15,16,17,18,19],[20,21,22,23,24,25,26]],
   takvimIsaretli: 24,                 // kırmızı halkayla işaretlenen gün
-  takvimFoto: "takvim.jpeg",          // işaretli güne oturan fotoğraf (repoya bu adla yükle)
+  takvimFoto: "takvim.png",           // işaretli güne oturan fotoğraf (uzantı dosyayla birebir aynı olmalı)
 
   // 1) Giriş
   kavisYazi: "bugünün hissettirdiği huzur",   // tepedeki kavisli büyük yazı (uzunsa kendini küçültür)
@@ -1442,7 +1443,7 @@ $("#takvimGovde").innerHTML = AYAR.takvimHaftalar.map(hafta =>
   `<tr>${hafta.map(g => {
     if (g === AYAR.takvimIsaretli)
       return `<td class="isaretli"><span class="halka"></span><span class="gun-no">${g}</span>
-        ${AYAR.takvimFoto ? `<img class="takvim-foto" src="${AYAR.takvimFoto}" alt="">` : ""}${pastaKaralama}</td>`;
+        ${AYAR.takvimFoto ? `<img class="takvim-foto${/\.png$/i.test(AYAR.takvimFoto) ? " kesik" : ""}" src="${AYAR.takvimFoto}" alt="">` : ""}${pastaKaralama}</td>`;
     return `<td><span class="gun-no">${g ?? ""}</span></td>`;
   }).join("")}</tr>`).join("");
 $("#kavisYazi").textContent = AYAR.kavisYazi;
