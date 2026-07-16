@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Piknik Randevusu 🧺</title>
+<title>Doğum günün kutlu olsun bitanem ❤️</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@500;700&family=Patrick+Hand&family=Pinyon+Script&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -894,6 +894,40 @@ body.tunelde{overflow:hidden;height:100svh}
 .kitap-kontrol .buton{padding:10px 18px;font-size:.88rem}
 @media (prefers-reduced-motion: reduce){.yaprak{transition-duration:.01s}}
 
+/* yatay anı kartı & dikey video kartı */
+.serit-kart.yatay{flex:0 0 min(88vw,420px)}
+.serit-kart.yatay img{aspect-ratio:4/3}
+.serit-kart.dikey{flex:0 0 min(60vw,290px)}
+.serit-kart.dikey video{aspect-ratio:9/16;max-height:58svh}
+
+/* ============ AJANDA SAYFASI (tam ekran) ============ */
+.ajanda-sayfa{
+  position:fixed;inset:0;z-index:122;display:none;flex-direction:column;
+  background:linear-gradient(180deg,var(--cimen-koyu),var(--cimen));
+}
+.ajanda-sayfa.acik{display:flex}
+.ajanda-icerik{overflow-y:auto;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:56px 12px 26px}
+.ajanda-sayfa .kitap{width:min(860px,96vw)}
+.ajanda-onizleme{
+  position:relative;width:min(230px,62vw);aspect-ratio:3/4.1;cursor:pointer;
+  border-radius:12px;margin-top:8px;transition:transform .18s;
+  background:
+    radial-gradient(circle at 26% 30%, rgba(255,255,255,.07) 0 2px, transparent 3px),
+    linear-gradient(155deg,#9ab84a,#7f9c37 55%,#6d882c);
+  background-size:42px 42px, 100% 100%;
+  box-shadow:0 20px 45px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.ajanda-onizleme:active{transform:scale(.95)}
+.ajanda-onizleme::before{content:"";position:absolute;inset:8px;border:1.6px dashed rgba(60,78,22,.55);border-radius:8px}
+.ajanda-onizleme .lastik{position:absolute;top:-2px;bottom:-2px;right:13%;width:11px;background:linear-gradient(90deg,#2f4416,#486320 50%,#2f4416);border-radius:4px;box-shadow:0 0 8px rgba(0,0,0,.35)}
+.ajanda-onizleme .kabartma{position:absolute;inset:16% 15% 22%}
+.ajanda-onizleme .kabartma svg{width:100%;height:100%}
+.ajanda-onizleme .marka{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-family:'Quicksand',sans-serif;font-weight:600;letter-spacing:3px;font-size:.72rem;color:#54691f;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+
+/* ajanda yazı tipi düzeltmesi: satır çizgisine oturan okunaklı el yazısı */
+.aj-sehir{font-family:'Caveat',cursive;font-weight:700;font-size:clamp(1.5rem,5.2vw,2.2rem)}
+.aj-yazi{font-family:'Patrick Hand','Caveat',cursive;font-size:clamp(1.02rem,3.5vw,1.3rem);line-height:28px}
+
 canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:90}
 .muzik-dugme{position:fixed;top:16px;right:16px;z-index:95;width:44px;height:44px;border-radius:50%;border:1px solid rgba(250,243,227,.3);background:rgba(14,34,19,.6);color:var(--krem);font-size:1.1rem;cursor:pointer;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 @media (prefers-reduced-motion: reduce){
@@ -1272,8 +1306,8 @@ const AYAR = {
     { dosya: "ani-19.jpeg", tarih: "Anı 19", aciklama: "" },
     { dosya: "ani-20.jpeg", tarih: "Anı 20", aciklama: "" },
     { dosya: "ani-21.jpeg", tarih: "Anı 21", aciklama: "" },
-    { dosya: "ani-22.jpeg", tarih: "Anı 22", aciklama: "" },
-    { dosya: "ani-23.jpeg", tarih: "Anı 23", aciklama: "" },
+    { dosya: "ani-22.jpeg", yatay: true, tarih: "Anı 22", aciklama: "" },
+    { dosya: "ani-23.jpeg", yatay: true, tarih: "Anı 23", aciklama: "" },
     { dosya: "ani-24.jpeg", tarih: "Anı 24", aciklama: "" },
     { dosya: "ani-25.jpeg", tarih: "Anı 25", aciklama: "" },
     { dosya: "ani-26.jpeg", tarih: "Anı 26", aciklama: "" },
@@ -1285,15 +1319,15 @@ const AYAR = {
     { dosya: "ani-32.jpeg", tarih: "Anı 32", aciklama: "" },
     { dosya: "ani-33.jpeg", tarih: "Anı 33", aciklama: "" },
     { dosya: "ani-34.jpeg", tarih: "Anı 34", aciklama: "" },
-    { dosya: "ani-35.jpeg", tarih: "Anı 35", aciklama: "" },
-    { dosya: "ani-36.jpeg", tarih: "Anı 36", aciklama: "" },
-    { dosya: "ani-37.jpeg", tarih: "Anı 37", aciklama: "" },
+    { dosya: "ani-35.jpeg", yatay: true, tarih: "Anı 35", aciklama: "" },
+    { dosya: "ani-36.jpeg", yatay: true, tarih: "Anı 36", aciklama: "" },
+    { dosya: "ani-37.jpeg", yatay: true, tarih: "Anı 37", aciklama: "" },
     { dosya: "ani-38.jpeg", tarih: "Anı 38", aciklama: "" },
     { dosya: "ani-39.jpeg", tarih: "Anı 39", aciklama: "" },
     { dosya: "ani-40.jpeg", tarih: "Anı 40", aciklama: "" },
-    { dosya: "ani-41.jpeg", tarih: "Anı 41", aciklama: "" },
+    { dosya: "ani-41.jpeg", yatay: true, tarih: "Anı 41", aciklama: "" },
     { dosya: "ani-42.jpeg", tarih: "Anı 42", aciklama: "" },
-    { dosya: "ani-43.jpeg", tarih: "Anı 43", aciklama: "" },
+    { dosya: "ani-43.jpeg", yatay: true, tarih: "Anı 43", aciklama: "" },
     { dosya: "ani-44.jpeg", tarih: "Anı 44", aciklama: "" },
     { dosya: "ani-45.jpeg", tarih: "Anı 45", aciklama: "" },
     { dosya: "ani-46.jpeg", tarih: "Anı 46", aciklama: "" },
@@ -1304,13 +1338,13 @@ const AYAR = {
     { dosya: "ani-51.jpeg", tarih: "Anı 51", aciklama: "" },
     { dosya: "ani-52.jpeg", tarih: "Anı 52", aciklama: "" },
     { dosya: "ani-53.jpeg", tarih: "Anı 53", aciklama: "" },
-    { dosya: "ani-54.jpeg", tarih: "Anı 54", aciklama: "" },
-    { dosya: "ani-55.jpeg", tarih: "Anı 55", aciklama: "" },
+    { dosya: "ani-54.jpeg", yatay: true, tarih: "Anı 54", aciklama: "" },
+    { dosya: "ani-55.jpeg", yatay: true, tarih: "Anı 55", aciklama: "" },
     { dosya: "ani-56.jpeg", tarih: "Anı 56", aciklama: "" },
     { dosya: "ani-57.jpeg", tarih: "Anı 57", aciklama: "" },
     { dosya: "ani-58.jpeg", tarih: "Anı 58", aciklama: "" },
     { dosya: "ani-59.jpeg", tarih: "Anı 59", aciklama: "" },
-    { dosya: "ani-60.jpeg", tarih: "Anı 60", aciklama: "" },
+    { dosya: "ani-60.jpeg", yatay: true, tarih: "Anı 60", aciklama: "" },
     { dosya: "ani-61.jpeg", tarih: "Anı 61", aciklama: "" },
     { dosya: "ani-62.jpeg", tarih: "Anı 62", aciklama: "" }
   ],
@@ -1337,7 +1371,7 @@ const AYAR = {
   videoBaslik: "Videolarımız 🎬",
   videolar: [
     { dosya: "video-1.mp4", yazi: "Video 1 için yazın buraya" },
-    { dosya: "video-2.mp4", yazi: "" }, { dosya: "video-3.mp4", yazi: "" }, { dosya: "video-4.mp4", yazi: "" }, { dosya: "video-5.mp4", yazi: "" },
+    { dosya: "video-2.mp4", dikey: true, yazi: "" }, { dosya: "video-3.mp4", dikey: true, yazi: "" }, { dosya: "video-4.mp4", dikey: true, yazi: "" }, { dosya: "video-5.mp4", yazi: "" },
     { dosya: "video-6.mp4", yazi: "" }, { dosya: "video-7.mp4", yazi: "" }, { dosya: "video-8.mp4", yazi: "" }, { dosya: "video-9.mp4", yazi: "" },
     { dosya: "video-10.mp4", yazi: "" }
   ],
@@ -1373,7 +1407,9 @@ const AYAR = {
     { dosya: "erasmus-6.jpeg", baslik: "6. Durak", yazi: "" },
     { dosya: "erasmus-7.jpeg", baslik: "7. Durak", yazi: "" },
     { dosya: "erasmus-8.jpeg", baslik: "8. Durak", yazi: "" },
-    { dosya: "erasmus-9.jpeg", baslik: "9. Durak — Ve devamı...", yazi: "" }
+    { dosya: "erasmus-9.jpeg", baslik: "9. Durak", yazi: "" },
+    { dosya: "erasmus-10.jpeg", baslik: "10. Durak", yazi: "" },
+    { dosya: "erasmus-11.jpeg", baslik: "11. Durak — Ve devamı...", yazi: "" }
   ],
 
 
@@ -1451,7 +1487,7 @@ $("#perdeYazi").textContent = AYAR.anilarSifreIpucu || "Şifreyi bilen görür";
 const filmSerit = $("#filmSerit");
 AYAR.fotograflar.forEach((f, i) => {
   const k = document.createElement("div");
-  k.className = "serit-kart";
+  k.className = "serit-kart" + (f.yatay ? " yatay" : "");
   k.innerHTML = `${f.dosya
       ? `<img src="${f.dosya}" alt="${f.tarih || "anı"}" loading="lazy">`
       : `<div class="bos">Fotoğraf gelecek 💚 (${i + 1})</div>`}
@@ -1570,7 +1606,7 @@ function albumAc(tip){
     $("#albumBaslik").textContent = AYAR.videoBaslik;
     AYAR.videolar.forEach((v, i) => {
       const k = document.createElement("div");
-      k.className = "serit-kart video-tip";
+      k.className = "serit-kart video-tip" + (v.dikey ? " dikey" : "");
       k.innerHTML = `${v.dosya
           ? `<video src="${v.dosya}" controls playsinline preload="metadata"></video>`
           : `<div class="bos">Video ${i + 1} buraya gelecek 🎬</div>`}
@@ -1647,19 +1683,41 @@ addEventListener("resize", () => requestAnimationFrame(yolCiz));
 
 /* ---- YEŞİL AJANDA (erasmus sayfasının altında) ---- */
 (function ajandaKur(){
-  const alan = document.createElement("div");
-  alan.className = "ajanda-alan";
-  alan.innerHTML = `
+  /* Erasmus'un altına: dokununca açılan kapalı defter */
+  const onizleme = document.createElement("div");
+  onizleme.className = "ajanda-alan";
+  onizleme.innerHTML = `
     <div class="altbaslik zarif" style="font-family:'Pinyon Script',cursive;font-size:clamp(1.9rem,7vw,2.6rem);color:var(--krem)" id="ajandaBaslik"></div>
-    <div class="kitap" id="kitap"><div class="kapak-taban"></div></div>
-    <div class="kitap-kontrol">
-      <button class="buton" id="ajGeri">◂</button>
-      <div class="serit-sayac" id="ajSayac"></div>
-      <button class="buton" id="ajIleri">▸</button>
+    <div class="ajanda-onizleme" id="ajandaAc">
+      <span class="lastik"></span>
+      <div class="kabartma" id="onizKabartma"></div>
+      <div class="marka" id="onizMarka"></div>
     </div>
-    <p class="ipucu">Sayfanın sağına / soluna dokunarak da çevirebilirsin</p>`;
-  $("#erasmusIcerik").appendChild(alan);
+    <p class="ipucu">Deftere dokun, ajanda açılsın</p>`;
+  $("#erasmusIcerik").appendChild(onizleme);
+
+  /* tam ekran ajanda sayfası */
+  const sayfa = document.createElement("div");
+  sayfa.className = "ajanda-sayfa";
+  sayfa.id = "ajandaSayfa";
+  sayfa.innerHTML = `
+    <div class="album-ust">
+      <h2 id="ajandaSayfaBaslik"></h2>
+      <button class="kapat" id="ajandaKapat" aria-label="Kapat">✕</button>
+    </div>
+    <div class="ajanda-icerik">
+      <div class="kitap" id="kitap"><div class="kapak-taban"></div></div>
+      <div class="kitap-kontrol">
+        <button class="buton" id="ajGeri">◂</button>
+        <div class="serit-sayac" id="ajSayac"></div>
+        <button class="buton" id="ajIleri">▸</button>
+      </div>
+      <p class="ipucu">Sayfanın sağına / soluna dokunarak da çevirebilirsin</p>
+    </div>`;
+  document.body.appendChild(sayfa);
   $("#ajandaBaslik").textContent = AYAR.ajandaBaslik;
+  $("#ajandaSayfaBaslik").textContent = AYAR.ajandaBaslik;
+  $("#onizMarka").textContent = AYAR.ajandaKapakYazi;
 
   /* kabartma kapak deseni: elma dalı + kalp */
   const kabartma = `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round">
@@ -1776,6 +1834,18 @@ addEventListener("resize", () => requestAnimationFrame(yolCiz));
     (e.clientX - r.left) > r.width / 2 ? ajIleri() : ajGeri();
   });
   zDuzenle(); sayacYaz();
+  $("#onizKabartma").innerHTML = kabartma;
+  function ajandaAcFn(){
+    $("#ajandaSayfa").classList.add("acik");
+  }
+  function ajandaKapatFn(){
+    $("#ajandaSayfa").classList.remove("acik");
+  }
+  $("#ajandaAc").onclick = ajandaAcFn;
+  $("#ajandaKapat").onclick = ajandaKapatFn;
+  addEventListener("keydown", e => {
+    if (e.key === "Escape" && $("#ajandaSayfa").classList.contains("acik")) ajandaKapatFn();
+  });
 })();
 
 /* ---- MİNİ KİLİT: Zaman Tüneli şifresi ---- */
